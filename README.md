@@ -1,9 +1,9 @@
 # Doctor Appointment System
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
-![Flask](https://img.shields.io/badge/Flask-2.0+-green.svg)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-5.0+-purple.svg)
-![SQLite](https://img.shields.io/badge/SQLite-3.0+-red.svg)
+![Flask](https://img.shields.io/badge/Flask-2.3+-green.svg)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.1+-purple.svg)
+![MySQL](https://img.shields.io/badge/MySQL-8.0+-orange.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 A comprehensive hospital appointment management system supporting Admin, Doctor, and Patient workflows with strict Online/Offline mode separation.
@@ -16,6 +16,7 @@ A comprehensive hospital appointment management system supporting Admin, Doctor,
 - **Doctor Management**: Add/update/deactivate doctors with specialities and consultation modes
 - **Shift Management**: Create and manage doctor shifts (Morning/Evening/Night)
 - **Slot & Token Management**: Generate time-based slots with token numbers
+- **Speciality Management**: Add and manage medical specializations
 - **System Monitoring**: Track appointment lifecycle and generate reports
 
 ### Doctor Role
@@ -23,7 +24,7 @@ A comprehensive hospital appointment management system supporting Admin, Doctor,
 - **Schedule Access**: View assigned duty schedules (read-only)
 - **Appointment Handling**: Update appointment status (confirmed/completed/cancelled/no-show)
 - **Prescription Management**: Add diagnosis, medicines, and follow-up instructions
-- **Online Consultation**: Add secure video consultation links
+- **Online Consultation**: Join video consultations with patients
 - **Offline Consultation**: Display clinic address automatically
 
 ### Patient Role
@@ -32,45 +33,56 @@ A comprehensive hospital appointment management system supporting Admin, Doctor,
 - **Doctor Filtering**: Filter by speciality, availability, and consultation mode
 - **Appointment Booking**: Select available shifts and slots, receive token numbers
 - **Medical History**: View past prescriptions and consultation notes
-- **Online/Offline Appointments**: Access video links or clinic information
+- **Prescription Details**: Access detailed prescription records with medicines
+- **Online/Offline Appointments**: Join video consultations or view clinic information
 
 ## 🛠️ Tech Stack
 
 ### Backend
 
-- **Python 3.8+**
-- **Flask** - Web framework
-- **Flask-SQLAlchemy** - ORM
-- **Flask-Login** - Authentication
-- **Flask-Migrate** - Database migrations
-- **Flask-WTF** - Form handling
-- **Flask-Bcrypt** - Password hashing
-- **Flask-SocketIO** - Real-time support
-- **SQLite** - Database (Development)
-- **PostgreSQL** - Database (Production - optional)
+- **Python 3.8+** - Programming language
+- **Flask 2.3** - Web framework
+- **Flask-SQLAlchemy 3.0** (requirements: Flask-SQLAlchemy==3.0.5) - ORM for database management
+- **SQLAlchemy 1.4** - SQL toolkit and ORM
+- **Flask-Login 0.6** - User session & authentication management
+- **Flask-Migrate 4.0** - Database schema migrations (Alembic)
+- **Flask-WTF 1.1** - Form handling & CSRF protection
+- **Flask-Bcrypt 1.0** - Password hashing
+- **Flask-SocketIO 5.3** - Real-time WebSocket support
+- **PyMySQL 1.1** - MySQL database driver
+- **python-dotenv 1.0** - Environment variable management
+- **email-validator 2.0** - Email validation
+- **Werkzeug 2.3** - WSGI utility library
+- **cryptography 41+** - Cryptographic operations
+
+### Database
+
+- **MySQL 8.0+** - Relational database (Development, Testing & Production)
+  - `doctor_appointment_dev` — Development database
+  - `doctor_appointment_test` — Testing database
+  - `doctor_appointment_prod` — Production database
 
 ### Frontend
 
-- **HTML5**
-- **CSS3**
-- **Bootstrap 5**
-- **JavaScript**
-- **Jinja2 Templates**
+- **HTML5** - Markup structure
+- **CSS3** - Custom styling (`style.css`)
+- **Bootstrap 5.1** - Responsive UI framework
+- **JavaScript** - Client-side logic (`main.js`, `fixes.js`)
+- **Jinja2** - Server-side template engine
+- **Font Awesome 6** - Icon library
+- **Chart.js** - Included in frontend templates for dashboards/analytics
 
-### Realtime & Video
+### Video Consultation
 
-- **WebRTC or Jitsi Meet** (planned)
-- **Flask-SocketIO**
-
-### Charts & Analytics
-
-- **Chart.js**
+- **Room-based consultation system** with time-gated access control
+- **Flask-SocketIO** for real-time communication support
 
 ## 🚀 Installation
 
 ### Prerequisites
 
 - Python 3.8+
+- MySQL Server 8.0+
 - pip and virtualenv
 
 ### Quick Start
@@ -78,13 +90,13 @@ A comprehensive hospital appointment management system supporting Admin, Doctor,
 1. **Clone and setup**
 
    ```bash
-   git clone <repository-url>
-   cd doctor-appointment-system
+   git clone https://github.com/madhanmohanreddyperam06/Doctor-Appointment-System.git
+   cd Doctor-Appointment-System
    python -m venv venv
-   
+
    # Windows
    venv\Scripts\activate
-   
+
    # macOS/Linux
    source venv/bin/activate
    ```
@@ -95,57 +107,174 @@ A comprehensive hospital appointment management system supporting Admin, Doctor,
    pip install -r requirements.txt
    ```
 
-3. **Start application** (auto-checks database)
+3. **Configure MySQL**
+
+   Update the `.env` file with your MySQL credentials:
+
+   ```env
+   MYSQL_HOST=localhost
+   MYSQL_USER=root
+   MYSQL_PASSWORD=your_password
+   MYSQL_DATABASE=doctor_appointment
+
+   DATABASE_URL=mysql+pymysql://root:your_password@localhost/doctor_appointment
+   DEV_DATABASE_URL=mysql+pymysql://root:your_password@localhost/doctor_appointment_dev
+   TEST_DATABASE_URL=mysql+pymysql://root:your_password@localhost/doctor_appointment_test
+   ```
+
+4. **Initialize the database**
+
+   ```bash
+   # Create MySQL databases
+   python init_mysql.py
+
+   # Seed with sample data
+   python init_mysql_data.py
+   ```
+
+5. **Start the application**
 
    ```bash
    python start.py
    ```
 
-4. **Access the application**
+6. **Access the application**
    - Open browser: `http://localhost:5000`
-   - Admin: <admin@hospital.com> / admin123
-   - Patient: <patient1@email.com> / patient123
+   - Admin: admin@hospital.com / admin123
+   - Patient: patient1@email.com / patient123
 
 ### Database Setup
 
-#### SQLite (Default - Development)
+#### MySQL (Default)
 
-- Database: `instance/doctor_appointment_dev.db`
-- Auto-initialized on first run
-- Sample data included
+- Driver: **PyMySQL** via `mysql+pymysql://` connection string
+- Configuration: `config.py` and `.env`
+- Separate databases for Development, Testing, and Production environments
 
-#### Manual Database Management
+#### Database Management
 
 ```bash
 # Check database status
 python check_database.py
 
-# Initialize/reset database
-python init_sqlite.py
+# Create MySQL databases
+python init_mysql.py
+
+# Initialize with sample data
+python init_mysql_data.py
+
+# Test MySQL connection
+python test_mysql.py
+
+# View database contents
+python view_database.py
+```
+
+#### Database Migrations
+
+```bash
+# Initialize migration
+flask db init
+
+# Create migration
+flask db migrate -m "Initial migration"
+
+# Apply migration
+flask db upgrade
 ```
 
 ### Project Structure
 
 ```text
-doctor-appointment-system/
-├── 📄 .env                    # Environment variables
-├── 📄 README.md               # Project documentation
-├── 📄 requirements.txt         # Python dependencies
-├── 📄 config.py               # Configuration settings
-├── 📄 run.py                  # Main application entry point
-├── 📄 start.py                # Enhanced startup script
-├── 📄 check_database.py       # Database status checker
-├── 📄 init_sqlite.py         # Database initializer
-├── 📁 app/                    # Main application code
-│   ├── 📁 models/             # Database models
-│   ├── 📁 routes/             # Application routes
-│   ├── 📁 static/             # CSS, JS, assets
-│   └── 📁 templates/          # HTML templates
-├── 📁 instance/               # Database file
-└── 📁 venv/                   # Virtual environment
+Doctor-Appointment-System/
+├── 📄 .env                        # Environment variables (MySQL config)
+├── 📄 .gitignore                  # Git ignore rules
+├── 📄 LICENSE                     # MIT License
+├── 📄 README.md                   # Project documentation
+├── 📄 requirements.txt            # Python dependencies
+├── 📄 config.py                   # App configuration (Dev/Test/Prod)
+├── 📄 run.py                      # Main application entry point
+├── 📄 start.py                    # Enhanced startup script with DB check
+├── 📄 check_database.py           # Database status checker
+├── 📄 init_mysql.py               # MySQL database creator
+├── 📄 init_mysql_data.py          # Database seeder with sample data
+├── 📄 test_mysql.py               # MySQL connection tester
+├── 📄 view_database.py            # Database content viewer
+├── 📁 app/                        # Main application package
+│   ├── 📄 __init__.py             # App factory & extension init
+│   ├── 📁 models/                 # SQLAlchemy database models
+│   │   ├── 📄 user.py             # User authentication model
+│   │   ├── 📄 admin.py            # Admin model
+│   │   ├── 📄 doctor.py           # Doctor model
+│   │   ├── 📄 patient.py          # Patient model
+│   │   ├── 📄 speciality.py       # Medical speciality model
+│   │   ├── 📄 shift.py            # Doctor shift model
+│   │   ├── 📄 slot.py             # Appointment slot model
+│   │   ├── 📄 appointment.py      # Appointment model
+│   │   ├── 📄 prescription.py     # Prescription model
+│   │   └── 📄 medicine.py         # Medicine model
+│   ├── 📁 routes/                 # Flask blueprints & route handlers
+│   │   ├── 📄 auth.py             # Authentication routes
+│   │   ├── 📄 admin.py            # Admin dashboard routes
+│   │   ├── 📄 doctor.py           # Doctor dashboard routes
+│   │   ├── 📄 patient.py          # Patient dashboard routes
+│   │   ├── 📄 main.py             # Landing page & general routes
+│   │   └── 📄 video.py            # Video consultation routes
+│   ├── 📁 static/                 # Static assets
+│   │   ├── 📁 css/                # Stylesheets
+│   │   │   └── 📄 style.css       # Custom application styles
+│   │   ├── 📁 js/                 # JavaScript files
+│   │   │   ├── 📄 main.js         # Core client-side logic
+│   │   │   └── 📄 fixes.js        # UI fixes & enhancements
+│   │   └── 📁 images/             # Image assets & icons
+│   └── 📁 templates/              # Jinja2 HTML templates
+│       ├── 📄 base.html           # Base layout template
+│       ├── 📄 video_consultation.html  # Video consultation page
+│       ├── 📁 auth/               # Authentication templates
+│       │   ├── 📄 landing.html    # Landing page
+│       │   ├── 📄 login.html      # Login page
+│       │   ├── 📄 register_patient.html  # Patient registration
+│       │   └── 📄 profile.html    # User profile page
+│       ├── 📁 admin/              # Admin dashboard templates
+│       │   ├── 📄 dashboard.html  # Admin overview
+│       │   ├── 📄 doctors.html    # Doctor management
+│       │   ├── 📄 add_doctor.html # Add new doctor
+│       │   ├── 📄 specialities.html  # Speciality management
+│       │   ├── 📄 add_speciality.html  # Add speciality
+│       │   ├── 📄 shifts.html     # Shift management
+│       │   └── 📄 add_shift.html  # Add new shift
+│       ├── 📁 doctor/             # Doctor dashboard templates
+│       │   ├── 📄 dashboard.html  # Doctor overview
+│       │   ├── 📄 schedule.html   # Duty schedule
+│       │   ├── 📄 appointments.html  # Appointment list
+│       │   ├── 📄 appointment_detail.html  # Appointment detail
+│       │   └── 📄 prescription.html  # Prescription form
+│       └── 📁 patient/            # Patient dashboard templates
+│           ├── 📄 dashboard.html  # Patient overview
+│           ├── 📄 doctors.html    # Browse doctors
+│           ├── 📄 doctor_detail.html  # Doctor profile
+│           ├── 📄 book_appointment.html  # Book appointment
+│           ├── 📄 appointments.html  # Appointment list
+│           ├── 📄 appointment_detail.html  # Appointment detail
+│           ├── 📄 medical_history.html  # Medical history
+│           └── 📄 prescription_detail.html  # Prescription view
+└── 📁 venv/                       # Virtual environment (not tracked)
 ```
 
-*See `PROJECT_STRUCTURE.md` for detailed structure.*
+## 🗄️ Database Schema
+
+The system uses the following main entities:
+
+- **Users** — Base user authentication with role-based access (admin/doctor/patient)
+- **Admins** — Hospital administrators
+- **Doctors** — Medical practitioners with specialities and consultation modes
+- **Patients** — Individuals seeking medical consultations
+- **Specialities** — Medical specializations (e.g., Cardiology, Dermatology)
+- **Shifts** — Doctor duty schedules (Morning/Evening/Night)
+- **Slots** — Time-based appointment slots with token numbers
+- **Appointments** — Patient-doctor consultations with status tracking
+- **Prescriptions** — Medical prescriptions with diagnosis and follow-up details
+- **Medicines** — Medications linked to prescriptions
 
 ## 🔐 Default Login Credentials
 
@@ -168,105 +297,81 @@ doctor-appointment-system/
 - Bob Smith: `patient2@email.com` / `patient123`
 - Carol Williams: `patient3@email.com` / `patient123`
 
-## Features
+## 🎯 Key Features
 
-### 🎯 Key Features
+- **Role-based Access Control**: Separate Admin, Doctor, and Patient workflows
+- **Online/Offline Consultation Modes**: Distinct consultation pathways
+- **Token-based Booking**: Unique appointment tokens per slot
+- **Shift Management**: Morning/Evening/Night shift scheduling
+- **Prescription System**: Complete medical prescriptions with medicines
+- **Video Consultation**: Time-gated room-based video consultation system
+- **Interactive Dashboards**: Chart.js powered analytics and statistics
+- **Responsive Design**: Bootstrap 5 mobile-first responsive layout
+- **Enhanced UI/UX**: Modern login/register pages with Font Awesome icons
+- **MySQL Database**: Production-ready relational database with sample data
 
-- **Role-based Access**: Admin, Doctor, Patient workflows
-- **Online/Offline Modes**: Separate consultation modes
-- **Token-based Booking**: Unique appointment tokens
-- **Shift Management**: Morning/Evening/Night shifts
-- **Prescription System**: Complete medical prescriptions
-- **Enhanced UI/UX**: Modern login/register pages
-- **SQLite Database**: Ready-to-use with sample data
+## 🛠️ Technical Features
 
-### 🛠️ Technical Features
+- **Flask Application Factory**: Modular app creation pattern
+- **Blueprint Architecture**: Route separation by role (auth, admin, doctor, patient, video)
+- **SQLAlchemy ORM**: Type-safe database models and relationships
+- **Flask-Login**: Session-based authentication with user loader
+- **Flask-Bcrypt**: Secure password hashing
+- **Flask-Migrate**: Alembic-based database schema migrations
+- **Flask-WTF**: CSRF protection and form validation
+- **Flask-SocketIO**: WebSocket support for real-time features
+- **Environment Configuration**: Separate Dev/Test/Prod configs via `config.py`
+- **Jinja2 Templating**: Server-side rendering with template inheritance
 
-- **Flask Framework**: Modern web framework
-- **SQLAlchemy ORM**: Database management
-- **Flask-Login**: Authentication system
-- **Bootstrap 5**: Responsive UI components
-- **Jinja2 Templates**: Server-side rendering
-- **Real-time Support**: Flask-SocketIO ready
-
-## Development
-
-### Adding New Features
-
-1. Create models in `app/models/`
-2. Add routes in `app/routes/`
-3. Create templates in `app/templates/`
-4. Update static files in `app/static/`
-
-### Database Changes
-
-```bash
-# Reset database with new schema
-python init_sqlite.py
-```
-
-### Configuration
-
-- Environment variables in `.env`
-- Database settings in `config.py`
-- Application factory in `app/__init__.py`
-
-## License
-
-This project is for educational and demonstration purposes.
-
-## Support
-
-For issues and questions, please refer to the project documentation.
-
-## 📁 Detailed Project Structure
-
-```text
-
-## Database Schema
-
-The system uses the following main entities:
-
-- **Users**: Base user authentication with role-based access
-- **Admins**: Hospital administrators
-- **Doctors**: Medical practitioners with specialities
-- **Patients**: Individuals seeking medical consultations
-- **Specialities**: Medical specializations
-- **Shifts**: Doctor duty schedules
-- **Slots**: Time-based appointment slots with tokens
-- **Appointments**: Patient-doctor consultations
-- **Prescriptions**: Medical prescriptions with medicines
-- **Medicines**: Available medications database
-
-## ⚙️ Advanced Development
+## ⚙️ Configuration
 
 ### Environment Variables
 
 Create a `.env` file in the root directory:
 
-```bash
+```env
+# Flask Configuration
 FLASK_APP=run.py
 FLASK_ENV=development
+FLASK_CONFIG=development
+
+# Database Configuration - MySQL
+MYSQL_HOST=localhost
+MYSQL_USER=root
+MYSQL_PASSWORD=your_password
+MYSQL_DATABASE=doctor_appointment
+
+DATABASE_URL=mysql+pymysql://root:your_password@localhost/doctor_appointment
+DEV_DATABASE_URL=mysql+pymysql://root:your_password@localhost/doctor_appointment_dev
+TEST_DATABASE_URL=mysql+pymysql://root:your_password@localhost/doctor_appointment_test
+
+# Security
 SECRET_KEY=your-secret-key-here
-DATABASE_URL=postgresql://username:password@localhost/doctor_appointment
+
+# Email Configuration (Optional)
+MAIL_SERVER=
+MAIL_PORT=587
+MAIL_USE_TLS=true
+MAIL_USERNAME=
+MAIL_PASSWORD=
 ```
 
-### Database Migrations
+### Application Configuration
+
+Database and application settings are managed in `config.py` with separate classes:
+
+| Config Class        | Purpose                | Database                        |
+| ------------------- | ---------------------- | ------------------------------- |
+| `DevelopmentConfig` | Local development      | `doctor_appointment_dev`        |
+| `TestingConfig`     | Automated testing      | `doctor_appointment_test`       |
+| `ProductionConfig`  | Production deployment  | `doctor_appointment_prod`       |
+
+## 🧪 Testing
 
 ```bash
-# Initialize migration
-flask db init
+# Test MySQL connection
+python test_mysql.py
 
-# Create migration
-flask db migrate -m "Initial migration"
-
-# Apply migration
-flask db upgrade
-```
-
-### Testing
-
-```bash
 # Run tests
 python -m pytest
 
@@ -274,14 +379,38 @@ python -m pytest
 python -m pytest --cov=app
 ```
 
+## 🤝 Development
+
+### Adding New Features
+
+1. Create models in `app/models/`
+2. Add routes in `app/routes/`
+3. Create templates in `app/templates/`
+4. Update static files in `app/static/`
+5. Register new blueprints in `app/__init__.py`
+
+### Database Changes
+
+```bash
+# Create a new migration after model changes
+flask db migrate -m "Description of changes"
+
+# Apply the migration
+flask db upgrade
+
+# Or reinitialize with fresh data
+python init_mysql.py
+python init_mysql_data.py
+```
+
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes
 4. Add tests if applicable
 5. Submit a pull request
@@ -289,7 +418,9 @@ This project is licensed under the MIT License.
 ## 📞 Support
 
 For support and questions, please open an issue in the repository or contact:
-**Madhan Mohan Reddy**
 
+**Madhan Mohan Reddy Peram**
 - 📧 Email: [madhanmohanreddyperam06@gmail.com](mailto:madhanmohanreddyperam06@gmail.com)
 - 📱 Mobile: +91 9110395993
+- 🔗 LinkedIn: [Madhan Mohan Reddy Peram](https://www.linkedin.com/in/madhan-mohan-reddy-peram-63181b253)
+- 🐦 Twitter: [@MadhanM16616334](https://x.com/MadhanM16616334)
