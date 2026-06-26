@@ -109,19 +109,26 @@ A comprehensive hospital appointment management system supporting Admin, Doctor,
    pip install -r requirements.txt
    ```
 
-3. **Configure MySQL**
+3. **Configure environment variables**
 
-   Update the `.env` file with your MySQL credentials:
+   Copy `.env.example` to `.env` and update with your configuration:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Update the `.env` file with your MySQL credentials and secret key:
 
    ```env
-   MYSQL_HOST=localhost
-   MYSQL_USER=root
-   MYSQL_PASSWORD=your_password
-   MYSQL_DATABASE=doctor_appointment
+   SECRET_KEY=your-secret-key-here-generate-a-random-string
+   DATABASE_URL=mysql+pymysql://username:password@localhost/doctor_appointment
+   FLASK_ENV=development
+   ```
 
-   DATABASE_URL=mysql+pymysql://root:your_password@localhost/doctor_appointment
-   DEV_DATABASE_URL=mysql+pymysql://root:your_password@localhost/doctor_appointment_dev
-   TEST_DATABASE_URL=mysql+pymysql://root:your_password@localhost/doctor_appointment_test
+   **Important:** Generate a secure SECRET_KEY for production. You can generate one using:
+
+   ```bash
+   python -c "import secrets; print(secrets.token_hex(32))"
    ```
 
 4. **Initialize the database**
@@ -141,9 +148,54 @@ A comprehensive hospital appointment management system supporting Admin, Doctor,
    ```
 
 6. **Access the application**
+
    - Open browser: `http://localhost:5000`
-   - Admin: <admin@hospital.com> / admin123
-   - Patient: <patient1@email.com> / patient123
+   - Admin: `admin@hospital.com` / `admin123`
+   - Patient: `patient1@email.com` / `patient123`
+
+## 🌐 Deployment
+
+### Production Deployment
+
+1. **Set environment variables**
+
+   Create a `.env` file with production values:
+
+   ```env
+   SECRET_KEY=your-production-secret-key
+   DATABASE_URL=mysql+pymysql://user:password@production-host/doctor_appointment
+   FLASK_ENV=production
+   ```
+
+2. **Use production configuration**
+
+   Set the `FLASK_ENV` environment variable to `production`:
+
+   ```bash
+   export FLASK_ENV=production  # Linux/macOS
+   set FLASK_ENV=production     # Windows
+   ```
+
+3. **Database setup**
+
+   Ensure MySQL is configured and the database exists on the production server.
+
+4. **Run with production server**
+
+   For production, use a WSGI server like Gunicorn:
+
+   ```bash
+   pip install gunicorn
+   gunicorn -w 4 -b 0.0.0.0:5000 run:app
+   ```
+
+### Security Notes
+
+- Never commit `.env` file to version control
+- Use strong, randomly generated SECRET_KEY
+- Use HTTPS in production
+- Configure firewall rules to restrict database access
+- Keep dependencies updated regularly
 
 ### Database Setup
 

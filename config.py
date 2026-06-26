@@ -6,9 +6,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'doctor-appointment-secret-key-2024'
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'mysql+pymysql://root:Madhanreddy%40123@localhost/doctor_appointment'
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    if not SECRET_KEY:
+        raise ValueError("SECRET_KEY environment variable must be set")
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+    if not SQLALCHEMY_DATABASE_URI:
+        raise ValueError("DATABASE_URL environment variable must be set")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # Session configuration
@@ -31,19 +34,16 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-        'mysql+pymysql://root:Madhanreddy%40123@localhost/doctor_appointment_dev'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
-        'mysql+pymysql://root:Madhanreddy%40123@localhost/doctor_appointment_test'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     WTF_CSRF_ENABLED = False
 
 class ProductionConfig(Config):
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'mysql+pymysql://root:Madhanreddy%40123@localhost/doctor_appointment_prod'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 
 config = {
     'development': DevelopmentConfig,
