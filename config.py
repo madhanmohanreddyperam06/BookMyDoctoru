@@ -7,7 +7,8 @@ load_dotenv()
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'doctor-appointment-secret-key-2024'
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///doctor_appointment.db'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        'mysql+pymysql://root:Madhanreddy%40123@localhost/doctor_appointment'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # Session configuration
@@ -31,18 +32,18 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-        'sqlite:///doctor_appointment_dev.db'
+        'mysql+pymysql://root:Madhanreddy%40123@localhost/doctor_appointment_dev'
 
 class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
-        'sqlite:///doctor_appointment_test.db'
+        'mysql+pymysql://root:Madhanreddy%40123@localhost/doctor_appointment_test'
     WTF_CSRF_ENABLED = False
 
 class ProductionConfig(Config):
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'sqlite:///doctor_appointment_prod.db'
+        'mysql+pymysql://root:Madhanreddy%40123@localhost/doctor_appointment_prod'
 
 config = {
     'development': DevelopmentConfig,

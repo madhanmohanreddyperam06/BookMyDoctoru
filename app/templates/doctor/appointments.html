@@ -25,20 +25,27 @@
                 <label for="status" class="form-label">Status</label>
                 <select class="form-select" id="status" name="status">
                     <option value="">All Status</option>
-                    <option value="pending" {% if request.args.get('status') == 'pending' %}selected{% endif %}>Pending</option>
-                    <option value="confirmed" {% if request.args.get('status') == 'confirmed' %}selected{% endif %}>Confirmed</option>
-                    <option value="completed" {% if request.args.get('status') == 'completed' %}selected{% endif %}>Completed</option>
-                    <option value="cancelled" {% if request.args.get('status') == 'cancelled' %}selected{% endif %}>Cancelled</option>
-                    <option value="no-show" {% if request.args.get('status') == 'no-show' %}selected{% endif %}>No Show</option>
+                    <option value="pending" {% if request.args.get('status')=='pending' %}selected{% endif %}>Pending
+                    </option>
+                    <option value="confirmed" {% if request.args.get('status')=='confirmed' %}selected{% endif %}>
+                        Confirmed</option>
+                    <option value="completed" {% if request.args.get('status')=='completed' %}selected{% endif %}>
+                        Completed</option>
+                    <option value="cancelled" {% if request.args.get('status')=='cancelled' %}selected{% endif %}>
+                        Cancelled</option>
+                    <option value="no-show" {% if request.args.get('status')=='no-show' %}selected{% endif %}>No Show
+                    </option>
                 </select>
             </div>
             <div class="col-md-4">
                 <label for="date_from" class="form-label">From Date</label>
-                <input type="date" class="form-control" id="date_from" name="date_from" value="{{ request.args.get('date_from') or '' }}">
+                <input type="date" class="form-control" id="date_from" name="date_from"
+                    value="{{ request.args.get('date_from') or '' }}">
             </div>
             <div class="col-md-4">
                 <label for="date_to" class="form-label">To Date</label>
-                <input type="date" class="form-control" id="date_to" name="date_to" value="{{ request.args.get('date_to') or '' }}">
+                <input type="date" class="form-control" id="date_to" name="date_to"
+                    value="{{ request.args.get('date_to') or '' }}">
             </div>
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">
@@ -56,152 +63,145 @@
 <div class="card shadow">
     <div class="card-header">
         <h6 class="m-0 font-weight-bold text-primary">
-            Appointments 
+            Appointments
             {% if appointments %}
-                <span class="badge bg-secondary ms-2">{{ appointments.total }}</span>
+            <span class="badge bg-secondary ms-2">{{ appointments.total }}</span>
             {% endif %}
         </h6>
     </div>
     <div class="card-body">
         {% if appointments %}
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Patient</th>
-                            <th>Token</th>
-                            <th>Status</th>
-                            <th>Mode</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for appointment in appointments.items %}
-                        <tr>
-                            <td>{{ appointment.date.strftime('%d-%m-%Y') }}</td>
-                            <td>{{ appointment.time.strftime('%I:%M %p') }}</td>
-                            <td>
-                                <a href="#" class="text-decoration-none">
-                                    {{ appointment.patient.full_name }}
-                                </a>
-                            </td>
-                            <td>
-                                <span class="badge bg-info">{{ appointment.slot.token_number }}</span>
-                            </td>
-                            <td>
-                                {% if appointment.status == 'pending' %}
-                                    <span class="badge bg-warning">Pending</span>
-                                {% elif appointment.status == 'confirmed' %}
-                                    <span class="badge bg-primary">Confirmed</span>
-                                {% elif appointment.status == 'completed' %}
-                                    <span class="badge bg-success">Completed</span>
-                                {% elif appointment.status == 'cancelled' %}
-                                    <span class="badge bg-danger">Cancelled</span>
-                                {% elif appointment.status == 'no-show' %}
-                                    <span class="badge bg-secondary">No Show</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if appointment.consultation_mode == 'online' %}
-                                    <span class="badge bg-info">Online</span>
-                                {% else %}
-                                    <span class="badge bg-secondary">Offline</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <div class="btn-group btn-group-sm">
-                                    <a href="{{ url_for('doctor.appointment_detail', appointment_id=appointment.id) }}" 
-                                       class="btn btn-outline-primary" title="View Details">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    {% if appointment.status in ['pending', 'confirmed'] %}
-                                        <button class="btn btn-success" 
-                                                data-action="updateStatus" 
-                                                data-id="{{ appointment.id }}" 
-                                                data-status="completed"
-                                                title="Mark as Completed">
-                                            <i class="fas fa-check"></i>
-                                        </button>
-                                        <button class="btn btn-warning" 
-                                                data-action="updateStatus" 
-                                                data-id="{{ appointment.id }}" 
-                                                data-status="cancelled"
-                                                title="Cancel Appointment">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                        <button class="btn btn-danger" 
-                                                data-action="updateStatus" 
-                                                data-id="{{ appointment.id }}" 
-                                                data-status="no-show"
-                                                title="Mark as No-Show">
-                                            <i class="fas fa-user-slash"></i>
-                                        </button>
-                                    {% endif %}
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Pagination -->
-            {% if appointments.pages > 1 %}
-            <nav aria-label="Appointments pagination">
-                <ul class="pagination justify-content-center">
-                    {% if appointments.has_prev %}
-                        <li class="page-item">
-                            <a class="page-link" href="{{ url_for('doctor.appointments', page=appointments.prev_num, **request.args) }}">
-                                <i class="fas fa-chevron-left"></i> Previous
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Patient</th>
+                        <th>Token</th>
+                        <th>Status</th>
+                        <th>Mode</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments.items %}
+                    <tr>
+                        <td>{{ appointment.date.strftime('%d-%m-%Y') }}</td>
+                        <td>{{ appointment.time.strftime('%I:%M %p') }}</td>
+                        <td>
+                            <a href="#" class="text-decoration-none">
+                                {{ appointment.patient.full_name }}
                             </a>
-                        </li>
-                    {% endif %}
-                    
-                    {% for page_num in appointments.iter_pages() %}
-                        {% if page_num %}
-                            {% if page_num != appointments.page %}
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ url_for('doctor.appointments', page=page_num, **request.args) }}">
-                                        {{ page_num }}
-                                    </a>
-                                </li>
-                            {% else %}
-                                <li class="page-item active">
-                                    <span class="page-link">{{ page_num }}</span>
-                                </li>
+                        </td>
+                        <td>
+                            <span class="badge bg-info">{{ appointment.slot.token_number }}</span>
+                        </td>
+                        <td>
+                            {% if appointment.status == 'pending' %}
+                            <span class="badge bg-warning">Pending</span>
+                            {% elif appointment.status == 'confirmed' %}
+                            <span class="badge bg-primary">Confirmed</span>
+                            {% elif appointment.status == 'completed' %}
+                            <span class="badge bg-success">Completed</span>
+                            {% elif appointment.status == 'cancelled' %}
+                            <span class="badge bg-danger">Cancelled</span>
+                            {% elif appointment.status == 'no-show' %}
+                            <span class="badge bg-secondary">No Show</span>
                             {% endif %}
-                        {% else %}
-                            <li class="page-item disabled">
-                                <span class="page-link">...</span>
-                            </li>
-                        {% endif %}
+                        </td>
+                        <td>
+                            {% if appointment.consultation_mode == 'online' %}
+                            <span class="badge bg-info">Online</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Offline</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ url_for('doctor.appointment_detail', appointment_id=appointment.id) }}"
+                                    class="btn btn-outline-primary" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                {% if appointment.status in ['pending', 'confirmed'] %}
+                                <button class="btn btn-success" data-action="updateStatus"
+                                    data-id="{{ appointment.id }}" data-status="completed" title="Mark as Completed">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn btn-warning" data-action="updateStatus"
+                                    data-id="{{ appointment.id }}" data-status="cancelled" title="Cancel Appointment">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <button class="btn btn-danger" data-action="updateStatus" data-id="{{ appointment.id }}"
+                                    data-status="no-show" title="Mark as No-Show">
+                                    <i class="fas fa-user-slash"></i>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
                     {% endfor %}
-                    
-                    {% if appointments.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="{{ url_for('doctor.appointments', page=appointments.next_num, **request.args) }}">
-                                Next <i class="fas fa-chevron-right"></i>
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
-            {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if appointments.pages > 1 %}
+        <nav aria-label="Appointments pagination">
+            <ul class="pagination justify-content-center">
+                {% if appointments.has_prev %}
+                <li class="page-item">
+                    <a class="page-link"
+                        href="{{ url_for('doctor.appointments', page=appointments.prev_num, **request.args) }}">
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for page_num in appointments.iter_pages() %}
+                {% if page_num %}
+                {% if page_num != appointments.page %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('doctor.appointments', page=page_num, **request.args) }}">
+                        {{ page_num }}
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item active">
+                    <span class="page-link">{{ page_num }}</span>
+                </li>
+                {% endif %}
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                {% if appointments.has_next %}
+                <li class="page-item">
+                    <a class="page-link"
+                        href="{{ url_for('doctor.appointments', page=appointments.next_num, **request.args) }}">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
         {% else %}
-            <div class="text-center py-5">
-                <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
-                <h5 class="text-muted">No Appointments Found</h5>
-                <p class="text-muted">
-                    {% if request.args.get('status') or request.args.get('date_from') or request.args.get('date_to') %}
-                        No appointments match your current filters. 
-                        <a href="{{ url_for('doctor.appointments') }}">Clear filters</a> to see all appointments.
-                    {% else %}
-                        You don't have any appointments scheduled.
-                    {% endif %}
-                </p>
-            </div>
+        <div class="text-center py-5">
+            <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+            <h5 class="text-muted">No Appointments Found</h5>
+            <p class="text-muted">
+                {% if request.args.get('status') or request.args.get('date_from') or request.args.get('date_to') %}
+                No appointments match your current filters.
+                <a href="{{ url_for('doctor.appointments') }}">Clear filters</a> to see all appointments.
+                {% else %}
+                You don't have any appointments scheduled.
+                {% endif %}
+            </p>
+        </div>
         {% endif %}
     </div>
 </div>

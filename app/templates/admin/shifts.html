@@ -65,119 +65,121 @@
     </div>
     <div class="card-body">
         {% if shifts.items %}
-            <div class="table-responsive">
-                <table class="table table-bordered" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>Doctor</th>
-                            <th>Date</th>
-                            <th>Shift Type</th>
-                            <th>Time</th>
-                            <th>Mode</th>
-                            <th>Booked</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for shift in shifts.items %}
-                        <tr>
-                            <td>
-                                <div>
-                                    <strong>{{ shift.doctor.full_name }}</strong><br>
-                                    <small class="text-muted">{{ shift.doctor.speciality.name }}</small>
+        <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Shift Type</th>
+                        <th>Time</th>
+                        <th>Mode</th>
+                        <th>Booked</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for shift in shifts.items %}
+                    <tr>
+                        <td>
+                            <div>
+                                <strong>{{ shift.doctor.full_name }}</strong><br>
+                                <small class="text-muted">{{ shift.doctor.speciality.name }}</small>
+                            </div>
+                        </td>
+                        <td>{{ shift.date.strftime('%b %d, %Y') }}</td>
+                        <td>
+                            <span class="badge bg-info">{{ shift.shift_type.title() }}</span>
+                        </td>
+                        <td>{{ shift.shift_display }}</td>
+                        <td>
+                            <span
+                                class="badge bg-{{ 'primary' if shift.consultation_mode == 'online' else 'secondary' }}">
+                                {{ shift.consultation_mode.title() }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="shift-progress">
+                                <div class="progress-bar {{ 'bg-warning' if shift.get_booked_count() >= shift.max_patients * 0.8 else 'bg-success' }}"
+                                    role="progressbar"
+                                    data-width="{{ shift.get_booked_count() }}-{{ shift.max_patients }}">
+                                    {{ shift.get_booked_count() }}/{{ shift.max_patients }}
                                 </div>
-                            </td>
-                            <td>{{ shift.date.strftime('%b %d, %Y') }}</td>
-                            <td>
-                                <span class="badge bg-info">{{ shift.shift_type.title() }}</span>
-                            </td>
-                            <td>{{ shift.shift_display }}</td>
-                            <td>
-                                <span class="badge bg-{{ 'primary' if shift.consultation_mode == 'online' else 'secondary' }}">
-                                    {{ shift.consultation_mode.title() }}
-                                </span>
-                            </td>
-                            <td>
-                                <div class="shift-progress">
-    <div class="progress-bar {{ 'bg-warning' if shift.get_booked_count() >= shift.max_patients * 0.8 else 'bg-success' }}" 
-         role="progressbar" 
-         data-width="{{ shift.get_booked_count() }}-{{ shift.max_patients }}">
-        {{ shift.get_booked_count() }}/{{ shift.max_patients }}
-    </div>
-</div>
-                            </td>
-                            <td>
-                                <span class="badge bg-{{ 'success' if shift.is_active else 'danger' }}">
-                                    {{ 'Active' if shift.is_active else 'Inactive' }}
-                                </span>
-                            </td>
-                            <td>
-                                <div class="btn-group btn-group-sm">
-                                    <a href="#" class="btn btn-outline-info" title="View Slots">
-                                        <i class="fas fa-clock"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-outline-warning" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    {% if shift.is_active %}
-                                    <a href="#" class="btn btn-outline-danger" title="Cancel Shift" data-action="cancelShift" data-id="{{ shift.id }}">
-                                        <i class="fas fa-ban"></i>
-                                    </a>
-                                    {% endif %}
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Pagination -->
-            {% if shifts.pages > 1 %}
-            <nav aria-label="Shifts pagination">
-                <ul class="pagination justify-content-center">
-                    {% if shifts.has_prev %}
-                    <li class="page-item">
-                        <a class="page-link" href="{{ url_for('admin.shifts', page=shifts.prev_num) }}">Previous</a>
-                    </li>
-                    {% endif %}
-                    
-                    {% for page_num in shifts.iter_pages() %}
-                        {% if page_num %}
-                            {% if page_num != shifts.page %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('admin.shifts', page=page_num) }}">{{ page_num }}</a>
-                            </li>
-                            {% else %}
-                            <li class="page-item active">
-                                <span class="page-link">{{ page_num }}</span>
-                            </li>
-                            {% endif %}
-                        {% else %}
-                        <li class="page-item disabled">
-                            <span class="page-link">...</span>
-                        </li>
-                        {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-{{ 'success' if shift.is_active else 'danger' }}">
+                                {{ 'Active' if shift.is_active else 'Inactive' }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="#" class="btn btn-outline-info" title="View Slots">
+                                    <i class="fas fa-clock"></i>
+                                </a>
+                                <a href="#" class="btn btn-outline-warning" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                {% if shift.is_active %}
+                                <a href="#" class="btn btn-outline-danger" title="Cancel Shift"
+                                    data-action="cancelShift" data-id="{{ shift.id }}">
+                                    <i class="fas fa-ban"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
                     {% endfor %}
-                    
-                    {% if shifts.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="{{ url_for('admin.shifts', page=shifts.next_num) }}">Next</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
-            {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if shifts.pages > 1 %}
+        <nav aria-label="Shifts pagination">
+            <ul class="pagination justify-content-center">
+                {% if shifts.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.shifts', page=shifts.prev_num) }}">Previous</a>
+                </li>
+                {% endif %}
+
+                {% for page_num in shifts.iter_pages() %}
+                {% if page_num %}
+                {% if page_num != shifts.page %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.shifts', page=page_num) }}">{{ page_num }}</a>
+                </li>
+                {% else %}
+                <li class="page-item active">
+                    <span class="page-link">{{ page_num }}</span>
+                </li>
+                {% endif %}
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                {% if shifts.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.shifts', page=shifts.next_num) }}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
         {% else %}
-            <div class="text-center py-4">
-                <i class="fas fa-calendar-alt fa-3x text-muted mb-3"></i>
-                <h5 class="text-muted">No Shifts Found</h5>
-                <p class="text-muted">Start by adding your first doctor shift to the system.</p>
-                <a href="{{ url_for('admin.add_shift') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Add First Shift
-                </a>
-            </div>
+        <div class="text-center py-4">
+            <i class="fas fa-calendar-alt fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No Shifts Found</h5>
+            <p class="text-muted">Start by adding your first doctor shift to the system.</p>
+            <a href="{{ url_for('admin.add_shift') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add First Shift
+            </a>
+        </div>
         {% endif %}
     </div>
 </div>
@@ -199,14 +201,15 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-3 mb-4">
         <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Active Shifts</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ shifts.items|selectattr('is_active')|list|length }}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{ shifts.items|selectattr('is_active')|list|length }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-check-circle fa-2x text-gray-300"></i>
@@ -215,7 +218,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-3 mb-4">
         <div class="card border-left-info shadow h-100 py-2">
             <div class="card-body">
@@ -233,7 +236,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-3 mb-4">
         <div class="card border-left-warning shadow h-100 py-2">
             <div class="card-body">
@@ -243,7 +246,7 @@
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                             {% set total_slots = 0 %}
                             {% for shift in shifts %}
-                                {% set total_slots = total_slots + shift.max_patients %}
+                            {% set total_slots = total_slots + shift.max_patients %}
                             {% endfor %}
                             {{ total_slots }}
                         </div>
@@ -260,36 +263,36 @@
 
 {% block scripts %}
 <script>
-function cancelShift(shiftId) {
-    fetch(`/admin/shifts/${shiftId}/cancel`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showAlert('Shift cancelled successfully!', 'warning');
-            setTimeout(() => location.reload(), 1500);
-        } else {
-            showAlert('Failed to cancel shift', 'danger');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showAlert('An error occurred', 'danger');
-    });
-}
-
-// Set today's date as default
-document.addEventListener('DOMContentLoaded', function() {
-    const today = new Date().toISOString().split('T')[0];
-    const dateFilter = document.getElementById('date_filter');
-    if (dateFilter && !dateFilter.value) {
-        // Don't set default value to allow viewing all shifts
+    function cancelShift(shiftId) {
+        fetch(`/admin/shifts/${shiftId}/cancel`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('Shift cancelled successfully!', 'warning');
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showAlert('Failed to cancel shift', 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('An error occurred', 'danger');
+            });
     }
-});
+
+    // Set today's date as default
+    document.addEventListener('DOMContentLoaded', function () {
+        const today = new Date().toISOString().split('T')[0];
+        const dateFilter = document.getElementById('date_filter');
+        if (dateFilter && !dateFilter.value) {
+            // Don't set default value to allow viewing all shifts
+        }
+    });
 </script>
 {% endblock %}

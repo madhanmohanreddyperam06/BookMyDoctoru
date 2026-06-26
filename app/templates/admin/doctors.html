@@ -21,108 +21,111 @@
     </div>
     <div class="card-body">
         {% if doctors.items %}
-            <div class="table-responsive">
-                <table class="table table-bordered" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Speciality</th>
-                            <th>Mode</th>
-                            <th>Fee</th>
-                            <th>Experience</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for doctor in doctors.items %}
-                        <tr>
-                            <td>{{ doctor.full_name }}</td>
-                            <td>{{ doctor.user.email }}</td>
-                            <td>{{ doctor.speciality.name }}</td>
-                            <td>
-                                <span class="badge bg-{{ 'primary' if doctor.consultation_mode == 'online' else 'secondary' }}">
-                                    {{ doctor.consultation_mode.title() }}
-                                </span>
-                            </td>
-                            <td>${{ "%.2f"|format(doctor.consultation_fee) }}</td>
-                            <td>{{ doctor.experience_years or '-' }} years</td>
-                            <td>
-                                <span class="badge bg-{{ 'success' if doctor.is_active else 'danger' }}">
-                                    {{ 'Active' if doctor.is_active else 'Inactive' }}
-                                </span>
-                            </td>
-                            <td>
-                                <div class="btn-group btn-group-sm">
-                                    <a href="#" class="btn btn-outline-info" title="View Details">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-outline-warning" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    {% if doctor.is_active %}
-                                    <a href="#" class="btn btn-outline-danger" title="Deactivate" data-action="deactivateDoctor" data-id="{{ doctor.id }}">
-                                        <i class="fas fa-ban"></i>
-                                    </a>
-                                    {% else %}
-                                    <a href="#" class="btn btn-outline-success" title="Activate" data-action="activateDoctor" data-id="{{ doctor.id }}">
-                                        <i class="fas fa-check"></i>
-                                    </a>
-                                    {% endif %}
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Pagination -->
-            {% if doctors.pages > 1 %}
-            <nav aria-label="Doctors pagination">
-                <ul class="pagination justify-content-center">
-                    {% if doctors.has_prev %}
-                    <li class="page-item">
-                        <a class="page-link" href="{{ url_for('admin.doctors', page=doctors.prev_num) }}">Previous</a>
-                    </li>
-                    {% endif %}
-                    
-                    {% for page_num in doctors.iter_pages() %}
-                        {% if page_num %}
-                            {% if page_num != doctors.page %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('admin.doctors', page=page_num) }}">{{ page_num }}</a>
-                            </li>
-                            {% else %}
-                            <li class="page-item active">
-                                <span class="page-link">{{ page_num }}</span>
-                            </li>
-                            {% endif %}
-                        {% else %}
-                        <li class="page-item disabled">
-                            <span class="page-link">...</span>
-                        </li>
-                        {% endif %}
+        <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Speciality</th>
+                        <th>Mode</th>
+                        <th>Fee</th>
+                        <th>Experience</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doctor in doctors.items %}
+                    <tr>
+                        <td>{{ doctor.full_name }}</td>
+                        <td>{{ doctor.user.email }}</td>
+                        <td>{{ doctor.speciality.name }}</td>
+                        <td>
+                            <span
+                                class="badge bg-{{ 'primary' if doctor.consultation_mode == 'online' else 'secondary' }}">
+                                {{ doctor.consultation_mode.title() }}
+                            </span>
+                        </td>
+                        <td>${{ "%.2f"|format(doctor.consultation_fee) }}</td>
+                        <td>{{ doctor.experience_years or '-' }} years</td>
+                        <td>
+                            <span class="badge bg-{{ 'success' if doctor.is_active else 'danger' }}">
+                                {{ 'Active' if doctor.is_active else 'Inactive' }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="#" class="btn btn-outline-info" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="#" class="btn btn-outline-warning" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                {% if doctor.is_active %}
+                                <a href="#" class="btn btn-outline-danger" title="Deactivate"
+                                    data-action="deactivateDoctor" data-id="{{ doctor.id }}">
+                                    <i class="fas fa-ban"></i>
+                                </a>
+                                {% else %}
+                                <a href="#" class="btn btn-outline-success" title="Activate"
+                                    data-action="activateDoctor" data-id="{{ doctor.id }}">
+                                    <i class="fas fa-check"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
                     {% endfor %}
-                    
-                    {% if doctors.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="{{ url_for('admin.doctors', page=doctors.next_num) }}">Next</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
-            {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if doctors.pages > 1 %}
+        <nav aria-label="Doctors pagination">
+            <ul class="pagination justify-content-center">
+                {% if doctors.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.doctors', page=doctors.prev_num) }}">Previous</a>
+                </li>
+                {% endif %}
+
+                {% for page_num in doctors.iter_pages() %}
+                {% if page_num %}
+                {% if page_num != doctors.page %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.doctors', page=page_num) }}">{{ page_num }}</a>
+                </li>
+                {% else %}
+                <li class="page-item active">
+                    <span class="page-link">{{ page_num }}</span>
+                </li>
+                {% endif %}
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                {% if doctors.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.doctors', page=doctors.next_num) }}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
         {% else %}
-            <div class="text-center py-4">
-                <i class="fas fa-user-md fa-3x text-muted mb-3"></i>
-                <h5 class="text-muted">No doctors found</h5>
-                <p class="text-muted">Start by adding your first doctor to the system.</p>
-                <a href="{{ url_for('admin.add_doctor') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Add First Doctor
-                </a>
-            </div>
+        <div class="text-center py-4">
+            <i class="fas fa-user-md fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No doctors found</h5>
+            <p class="text-muted">Start by adding your first doctor to the system.</p>
+            <a href="{{ url_for('admin.add_doctor') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add First Doctor
+            </a>
+        </div>
         {% endif %}
     </div>
 </div>
@@ -144,14 +147,15 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-3 mb-4">
         <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Active Doctors</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ doctors.items|selectattr('is_active')|list|length }}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{ doctors.items|selectattr('is_active')|list|length }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-check-circle fa-2x text-gray-300"></i>
@@ -160,14 +164,15 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-3 mb-4">
         <div class="card border-left-info shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Online Doctors</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ doctors.items|selectattr('consultation_mode', 'equalto', 'online')|list|length }}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{ doctors.items|selectattr('consultation_mode', 'equalto', 'online')|list|length }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-laptop fa-2x text-gray-300"></i>
@@ -176,14 +181,15 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-3 mb-4">
         <div class="card border-left-warning shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Offline Doctors</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ doctors.items|selectattr('consultation_mode', 'equalto', 'offline')|list|length }}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{ doctors.items|selectattr('consultation_mode', 'equalto', 'offline')|list|length }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-hospital fa-2x text-gray-300"></i>
@@ -197,50 +203,50 @@
 
 {% block scripts %}
 <script>
-function activateDoctor(doctorId) {
-    fetch(`/admin/doctors/${doctorId}/activate`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showAlert('Doctor activated successfully!', 'success');
-            setTimeout(() => location.reload(), 1500);
-        } else {
-            showAlert('Failed to activate doctor', 'danger');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showAlert('An error occurred', 'danger');
-    });
-}
+    function activateDoctor(doctorId) {
+        fetch(`/admin/doctors/${doctorId}/activate`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('Doctor activated successfully!', 'success');
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showAlert('Failed to activate doctor', 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('An error occurred', 'danger');
+            });
+    }
 
-function deactivateDoctor(doctorId) {
-    fetch(`/admin/doctors/${doctorId}/deactivate`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showAlert('Doctor deactivated successfully!', 'warning');
-            setTimeout(() => location.reload(), 1500);
-        } else {
-            showAlert('Failed to deactivate doctor', 'danger');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showAlert('An error occurred', 'danger');
-    });
-}
+    function deactivateDoctor(doctorId) {
+        fetch(`/admin/doctors/${doctorId}/deactivate`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('Doctor deactivated successfully!', 'warning');
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showAlert('Failed to deactivate doctor', 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('An error occurred', 'danger');
+            });
+    }
 </script>
 {% endblock %}

@@ -6,7 +6,7 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Doctor Dashboard</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="btn-group me-2">
+        <div class="btn-group me-2 d-flex flex-wrap">
             <a href="{{ url_for('doctor.schedule') }}" class="btn btn-sm btn-outline-primary">View Schedule</a>
             <a href="{{ url_for('doctor.appointments') }}" class="btn btn-sm btn-outline-primary">All Appointments</a>
         </div>
@@ -21,7 +21,7 @@
                 <h4 class="card-title">Welcome, Dr. {{ doctor.first_name }} {{ doctor.last_name }}!</h4>
                 <p class="card-text">
                     <strong>Speciality:</strong> {{ doctor.speciality.name }}<br>
-                    <strong>Consultation Mode:</strong> 
+                    <strong>Consultation Mode:</strong>
                     <span class="badge bg-{{ 'primary' if doctor.consultation_mode == 'online' else 'secondary' }}">
                         {{ doctor.consultation_mode.title() }}
                     </span><br>
@@ -34,85 +34,88 @@
 
 <!-- Today's Schedule -->
 <div class="row mb-4">
-    <div class="col-lg-8">
-        <div class="card shadow mb-4">
+    <div class="col-12 col-lg-8 mb-4 mb-lg-0">
+        <div class="card shadow h-100">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Today's Appointments</h6>
             </div>
             <div class="card-body">
                 {% if today_appointments %}
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Token</th>
-                                    <th>Patient</th>
-                                    <th>Time</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for appointment in today_appointments %}
-                                <tr>
-                                    <td><span class="badge bg-primary">{{ appointment.token_display }}</span></td>
-                                    <td>{{ appointment.patient.full_name }}</td>
-                                    <td>{{ appointment.start_time.strftime('%H:%M') }}</td>
-                                    <td>
-                                        <span class="badge bg-{{ 'success' if appointment.status == 'completed' else 'warning' if appointment.status == 'confirmed' else 'danger' }}">
-                                            {{ appointment.status_display }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <a href="{{ url_for('doctor.appointment_detail', appointment_id=appointment.id) }}" 
-                                           class="btn btn-sm btn-info">View</a>
-                                        {% if appointment.status == 'confirmed' %}
-                                        <button class="btn btn-sm btn-success" data-action="updateStatus" data-id="{{ appointment.id }}" data-status="completed">Complete</button>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-mobile-compact">
+                        <thead>
+                            <tr>
+                                <th>Token</th>
+                                <th class="d-none d-md-table-cell">Patient</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in today_appointments %}
+                            <tr>
+                                <td><span class="badge bg-primary">{{ appointment.token_display }}</span></td>
+                                <td class="d-none d-md-table-cell">{{ appointment.patient.full_name }}</td>
+                                <td>{{ appointment.start_time.strftime('%H:%M') }}</td>
+                                <td>
+                                    <span
+                                        class="badge bg-{{ 'success' if appointment.status == 'completed' else 'warning' if appointment.status == 'confirmed' else 'danger' }}">
+                                        {{ appointment.status_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('doctor.appointment_detail', appointment_id=appointment.id) }}"
+                                        class="btn btn-sm btn-info">View</a>
+                                    {% if appointment.status == 'confirmed' %}
+                                    <button class="btn btn-sm btn-success" data-action="updateStatus"
+                                        data-id="{{ appointment.id }}" data-status="completed">Complete</button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
                 {% else %}
-                    <div class="text-center py-4">
-                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                        <p class="text-muted">No appointments scheduled for today</p>
-                    </div>
+                <div class="text-center py-4">
+                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No appointments scheduled for today</p>
+                </div>
                 {% endif %}
             </div>
         </div>
     </div>
-    
-    <div class="col-lg-4">
-        <div class="card shadow mb-4">
+
+    <div class="col-12 col-lg-4">
+        <div class="card shadow h-100">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">This Week's Schedule</h6>
             </div>
             <div class="card-body">
                 {% if week_shifts %}
-                    <div class="list-group list-group-flush">
-                        {% for shift in week_shifts %}
-                        <div class="list-group-item">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-1">{{ shift.date.strftime('%A, %b %d') }}</h6>
-                                <small>{{ shift.shift_display }}</small>
-                            </div>
-                            <p class="mb-1">
-                                <span class="badge bg-{{ 'primary' if shift.consultation_mode == 'online' else 'secondary' }}">
-                                    {{ shift.consultation_mode.title() }}
-                                </span>
-                                <small class="ms-2">{{ shift.get_booked_count() }}/{{ shift.max_patients }} booked</small>
-                            </p>
+                <div class="list-group list-group-flush">
+                    {% for shift in week_shifts %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ shift.date.strftime('%A, %b %d') }}</h6>
+                            <small>{{ shift.shift_display }}</small>
                         </div>
-                        {% endfor %}
+                        <p class="mb-1">
+                            <span
+                                class="badge bg-{{ 'primary' if shift.consultation_mode == 'online' else 'secondary' }}">
+                                {{ shift.consultation_mode.title() }}
+                            </span>
+                            <small class="ms-2">{{ shift.get_booked_count() }}/{{ shift.max_patients }} booked</small>
+                        </p>
                     </div>
+                    {% endfor %}
+                </div>
                 {% else %}
-                    <div class="text-center py-4">
-                        <i class="fas fa-calendar-alt fa-3x text-muted mb-3"></i>
-                        <p class="text-muted">No shifts scheduled this week</p>
-                    </div>
+                <div class="text-center py-4">
+                    <i class="fas fa-calendar-alt fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No shifts scheduled this week</p>
+                </div>
                 {% endif %}
             </div>
         </div>
@@ -126,48 +129,50 @@
     </div>
     <div class="card-body">
         {% if upcoming_appointments %}
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Patient</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Mode</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for appointment in upcoming_appointments %}
-                        <tr>
-                            <td>{{ appointment.patient.full_name }}</td>
-                            <td>{{ appointment.date.strftime('%b %d, %Y') }}</td>
-                            <td>{{ appointment.start_time.strftime('%H:%M') }}</td>
-                            <td>
-                                <span class="badge bg-{{ 'primary' if appointment.consultation_mode == 'online' else 'secondary' }}">
-                                    {{ appointment.consultation_mode.title() }}
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge bg-{{ 'success' if appointment.status == 'completed' else 'warning' if appointment.status == 'confirmed' else 'danger' }}">
-                                    {{ appointment.status_display }}
-                                </span>
-                            </td>
-                            <td>
-                                <a href="{{ url_for('doctor.appointment_detail', appointment_id=appointment.id) }}" 
-                                   class="btn btn-sm btn-info">View</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-mobile-compact">
+                <thead>
+                    <tr>
+                        <th class="d-none d-md-table-cell">Patient</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th class="d-none d-sm-table-cell">Mode</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in upcoming_appointments %}
+                    <tr>
+                        <td class="d-none d-md-table-cell">{{ appointment.patient.full_name }}</td>
+                        <td>{{ appointment.date.strftime('%b %d, %Y') }}</td>
+                        <td>{{ appointment.start_time.strftime('%H:%M') }}</td>
+                        <td class="d-none d-sm-table-cell">
+                            <span
+                                class="badge bg-{{ 'primary' if appointment.consultation_mode == 'online' else 'secondary' }}">
+                                {{ appointment.consultation_mode.title() }}
+                            </span>
+                        </td>
+                        <td>
+                            <span
+                                class="badge bg-{{ 'success' if appointment.status == 'completed' else 'warning' if appointment.status == 'confirmed' else 'danger' }}">
+                                {{ appointment.status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('doctor.appointment_detail', appointment_id=appointment.id) }}"
+                                class="btn btn-sm btn-info">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
-            <div class="text-center py-4">
-                <i class="fas fa-calendar-check fa-3x text-muted mb-3"></i>
-                <p class="text-muted">No upcoming appointments</p>
-            </div>
+        <div class="text-center py-4">
+            <i class="fas fa-calendar-check fa-3x text-muted mb-3"></i>
+            <p class="text-muted">No upcoming appointments</p>
+        </div>
         {% endif %}
     </div>
 </div>
@@ -189,14 +194,16 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-4 mb-4">
         <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Completed Today</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ today_appointments|selectattr('status', 'equalto', 'completed')|list|length }}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{ today_appointments|selectattr('status', 'equalto', 'completed')|list|length }}
+                        </div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-check-circle fa-2x text-gray-300"></i>
@@ -205,7 +212,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-4 mb-4">
         <div class="card border-left-info shadow h-100 py-2">
             <div class="card-body">
@@ -226,28 +233,28 @@
 
 {% block scripts %}
 <script>
-function updateStatus(appointmentId, status) {
-    fetch(`/doctor/appointment/${appointmentId}/update_status`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: `status=${status}`
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showAlert('Appointment status updated successfully', 'success');
-            setTimeout(() => location.reload(), 1500);
-        } else {
-            showAlert('Failed to update status', 'danger');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showAlert('An error occurred', 'danger');
-    });
-}
+    function updateStatus(appointmentId, status) {
+        fetch(`/doctor/appointment/${appointmentId}/update_status`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: `status=${status}`
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('Appointment status updated successfully', 'success');
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showAlert('Failed to update status', 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('An error occurred', 'danger');
+            });
+    }
 </script>
 {% endblock %}

@@ -17,16 +17,16 @@
 <!-- Filter Pills -->
 <div class="mb-4">
     <div class="btn-group" role="group">
-        <a href="{{ url_for('patient.doctors', mode='all') }}" 
-           class="btn {{ 'btn-primary' if consultation_mode == 'all' else 'btn-outline-primary' }}">
+        <a href="{{ url_for('patient.doctors', mode='all') }}"
+            class="btn {{ 'btn-primary' if consultation_mode == 'all' else 'btn-outline-primary' }}">
             All Doctors
         </a>
-        <a href="{{ url_for('patient.doctors', mode='online') }}" 
-           class="btn {{ 'btn-primary' if consultation_mode == 'online' else 'btn-outline-primary' }}">
+        <a href="{{ url_for('patient.doctors', mode='online') }}"
+            class="btn {{ 'btn-primary' if consultation_mode == 'online' else 'btn-outline-primary' }}">
             <i class="fas fa-laptop"></i> Online
         </a>
-        <a href="{{ url_for('patient.doctors', mode='offline') }}" 
-           class="btn {{ 'btn-primary' if consultation_mode == 'offline' else 'btn-outline-primary' }}">
+        <a href="{{ url_for('patient.doctors', mode='offline') }}"
+            class="btn {{ 'btn-primary' if consultation_mode == 'offline' else 'btn-outline-primary' }}">
             <i class="fas fa-hospital"></i> Offline
         </a>
     </div>
@@ -58,7 +58,8 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="mb-0">{{ doctor.full_name }}</h6>
                 <div class="d-flex align-items-center">
-                    <span class="badge bg-{{ 'primary' if doctor.consultation_mode == 'online' else 'secondary' }} me-2">
+                    <span
+                        class="badge bg-{{ 'primary' if doctor.consultation_mode == 'online' else 'secondary' }} me-2">
                         {{ doctor.consultation_mode.title() }}
                     </span>
                     {% if doctor.experience_years %}
@@ -74,19 +75,20 @@
                         <small class="text-muted">/ consultation</small>
                     </div>
                 </div>
-                
+
                 {% if doctor.qualifications %}
-                <p class="card-text small">{{ doctor.qualifications[:100] }}{% if doctor.qualifications|length > 100 %}...{% endif %}</p>
+                <p class="card-text small">{{ doctor.qualifications[:100] }}{% if doctor.qualifications|length > 100
+                    %}...{% endif %}</p>
                 {% endif %}
-                
+
                 <div class="mt-3">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <small class="text-muted">
-                            <i class="fas fa-star text-warning"></i> 
+                            <i class="fas fa-star text-warning"></i>
                             4.8 (124 reviews)
                         </small>
                         <small class="text-muted">
-                            <i class="fas fa-calendar-check"></i> 
+                            <i class="fas fa-calendar-check"></i>
                             {{ doctor.appointments.filter_by(status='completed').count() }} appointments
                         </small>
                     </div>
@@ -94,12 +96,12 @@
             </div>
             <div class="card-footer bg-transparent">
                 <div class="d-grid gap-2">
-                    <a href="{{ url_for('patient.doctor_detail', doctor_id=doctor.id) }}" 
-                       class="btn btn-outline-primary btn-sm">
+                    <a href="{{ url_for('patient.doctor_detail', doctor_id=doctor.id) }}"
+                        class="btn btn-outline-primary btn-sm">
                         <i class="fas fa-eye"></i> View Profile
                     </a>
-                    <a href="{{ url_for('patient.book_appointment', doctor_id=doctor.id) }}" 
-                       class="btn btn-primary btn-sm">
+                    <a href="{{ url_for('patient.book_appointment', doctor_id=doctor.id) }}"
+                        class="btn btn-primary btn-sm">
                         <i class="fas fa-calendar-plus"></i> Book Appointment
                     </a>
                 </div>
@@ -124,31 +126,34 @@
     <ul class="pagination justify-content-center">
         {% if doctors.has_prev %}
         <li class="page-item">
-            <a class="page-link" href="{{ url_for('patient.doctors', page=doctors.prev_num, mode=consultation_mode, speciality=speciality_filter) }}">Previous</a>
+            <a class="page-link"
+                href="{{ url_for('patient.doctors', page=doctors.prev_num, mode=consultation_mode, speciality=speciality_filter) }}">Previous</a>
         </li>
         {% endif %}
-        
+
         {% for page_num in doctors.iter_pages() %}
-            {% if page_num %}
-                {% if page_num != doctors.page %}
-                <li class="page-item">
-                    <a class="page-link" href="{{ url_for('patient.doctors', page=page_num, mode=consultation_mode, speciality=speciality_filter) }}">{{ page_num }}</a>
-                </li>
-                {% else %}
-                <li class="page-item active">
-                    <span class="page-link">{{ page_num }}</span>
-                </li>
-                {% endif %}
-            {% else %}
-            <li class="page-item disabled">
-                <span class="page-link">...</span>
-            </li>
-            {% endif %}
+        {% if page_num %}
+        {% if page_num != doctors.page %}
+        <li class="page-item">
+            <a class="page-link"
+                href="{{ url_for('patient.doctors', page=page_num, mode=consultation_mode, speciality=speciality_filter) }}">{{ page_num }}</a>
+        </li>
+        {% else %}
+        <li class="page-item active">
+            <span class="page-link">{{ page_num }}</span>
+        </li>
+        {% endif %}
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">...</span>
+        </li>
+        {% endif %}
         {% endfor %}
-        
+
         {% if doctors.has_next %}
         <li class="page-item">
-            <a class="page-link" href="{{ url_for('patient.doctors', page=doctors.next_num, mode=consultation_mode, speciality=speciality_filter) }}">Next</a>
+            <a class="page-link"
+                href="{{ url_for('patient.doctors', page=doctors.next_num, mode=consultation_mode, speciality=speciality_filter) }}">Next</a>
         </li>
         {% endif %}
     </ul>
@@ -168,24 +173,25 @@
                     <div class="mb-3">
                         <label for="modal_consultation_mode" class="form-label">Consultation Mode</label>
                         <select class="form-select" id="modal_consultation_mode" name="mode">
-                            <option value="all" {{ 'selected' if consultation_mode == 'all' }}>All Modes</option>
-                            <option value="online" {{ 'selected' if consultation_mode == 'online' }}>Online</option>
-                            <option value="offline" {{ 'selected' if consultation_mode == 'offline' }}>Offline</option>
+                            <option value="all" {{ 'selected' if consultation_mode=='all' }}>All Modes</option>
+                            <option value="online" {{ 'selected' if consultation_mode=='online' }}>Online</option>
+                            <option value="offline" {{ 'selected' if consultation_mode=='offline' }}>Offline</option>
                         </select>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="modal_speciality" class="form-label">Speciality</label>
                         <select class="form-select" id="modal_speciality" name="speciality">
                             <option value="">All Specialities</option>
                             {% for speciality in specialities %}
-                            <option value="{{ speciality.name }}" {{ 'selected' if speciality_filter == speciality.name }}>
+                            <option value="{{ speciality.name }}" {{ 'selected' if speciality_filter==speciality.name
+                                }}>
                                 {{ speciality.name }}
                             </option>
                             {% endfor %}
                         </select>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="modal_fee_range" class="form-label">Consultation Fee Range</label>
                         <div class="row">
@@ -197,16 +203,18 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="modal_experience" class="form-label">Minimum Experience (years)</label>
-                        <input type="number" class="form-control" id="modal_experience" name="experience" min="0" max="50">
+                        <input type="number" class="form-control" id="modal_experience" name="experience" min="0"
+                            max="50">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="document.querySelector('#filterModal form').submit()">Apply Filters</button>
+                <button type="button" class="btn btn-primary"
+                    onclick="document.querySelector('#filterModal form').submit()">Apply Filters</button>
             </div>
         </div>
     </div>
@@ -215,22 +223,22 @@
 
 {% block scripts %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Auto-submit filter when mode changes
-    const modeSelect = document.getElementById('modal_consultation_mode');
-    if (modeSelect) {
-        modeSelect.addEventListener('change', function() {
-            document.querySelector('#filterModal form').submit();
-        });
-    }
-    
-    // Auto-submit filter when speciality changes
-    const specialitySelect = document.getElementById('modal_speciality');
-    if (specialitySelect) {
-        specialitySelect.addEventListener('change', function() {
-            document.querySelector('#filterModal form').submit();
-        });
-    }
-});
+    document.addEventListener('DOMContentLoaded', function () {
+        // Auto-submit filter when mode changes
+        const modeSelect = document.getElementById('modal_consultation_mode');
+        if (modeSelect) {
+            modeSelect.addEventListener('change', function () {
+                document.querySelector('#filterModal form').submit();
+            });
+        }
+
+        // Auto-submit filter when speciality changes
+        const specialitySelect = document.getElementById('modal_speciality');
+        if (specialitySelect) {
+            specialitySelect.addEventListener('change', function () {
+                document.querySelector('#filterModal form').submit();
+            });
+        }
+    });
 </script>
 {% endblock %}

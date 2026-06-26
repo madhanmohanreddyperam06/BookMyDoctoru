@@ -20,10 +20,12 @@
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ appointment.token_display }}</h5>
             <div>
-                <span class="badge bg-{{ 'primary' if appointment.consultation_mode == 'online' else 'secondary' }} me-2">
+                <span
+                    class="badge bg-{{ 'primary' if appointment.consultation_mode == 'online' else 'secondary' }} me-2">
                     {{ appointment.consultation_mode.title() }}
                 </span>
-                <span class="badge bg-{{ 'success' if appointment.status == 'completed' else 'warning' if appointment.status == 'confirmed' else 'danger' }}">
+                <span
+                    class="badge bg-{{ 'success' if appointment.status == 'completed' else 'warning' if appointment.status == 'confirmed' else 'danger' }}">
                     {{ appointment.status_display }}
                 </span>
             </div>
@@ -50,8 +52,9 @@
                 <div class="mb-3">
                     <p class="mb-1"><strong>Date:</strong> {{ appointment.date.strftime('%A, %B %d, %Y') }}</p>
                     <p class="mb-1"><strong>Time:</strong> {{ appointment.time_display }}</p>
-                    <p class="mb-1"><strong>Consultation Fee:</strong> ${{ "%.2f"|format(appointment.consultation_fee) }}</p>
-                    <p class="mb-1"><strong>Payment Status:</strong> 
+                    <p class="mb-1"><strong>Consultation Fee:</strong> ${{ "%.2f"|format(appointment.consultation_fee)
+                        }}</p>
+                    <p class="mb-1"><strong>Payment Status:</strong>
                         <span class="badge bg-{{ 'success' if appointment.payment_status == 'paid' else 'warning' }}">
                             {{ appointment.payment_status_display }}
                         </span>
@@ -59,7 +62,7 @@
                 </div>
             </div>
         </div>
-        
+
         {% if appointment.patient.medical_history %}
         <div class="row mt-3">
             <div class="col-12">
@@ -70,7 +73,7 @@
             </div>
         </div>
         {% endif %}
-        
+
         {% if appointment.patient.allergies %}
         <div class="row mt-3">
             <div class="col-12">
@@ -95,13 +98,16 @@
                 <h6 class="text-muted">Update Status</h6>
                 <div class="btn-group-vertical w-100" role="group">
                     {% if appointment.status == 'confirmed' %}
-                    <button class="btn btn-success" data-action="updateStatus" data-id="{{ appointment.id }}" data-status="completed">
+                    <button class="btn btn-success" data-action="updateStatus" data-id="{{ appointment.id }}"
+                        data-status="completed">
                         <i class="fas fa-check"></i> Mark as Completed
                     </button>
-                    <button class="btn btn-warning" data-action="updateStatus" data-id="{{ appointment.id }}" data-status="cancelled">
+                    <button class="btn btn-warning" data-action="updateStatus" data-id="{{ appointment.id }}"
+                        data-status="cancelled">
                         <i class="fas fa-times"></i> Cancel Appointment
                     </button>
-                    <button class="btn btn-danger" data-action="updateStatus" data-id="{{ appointment.id }}" data-status="no-show">
+                    <button class="btn btn-danger" data-action="updateStatus" data-id="{{ appointment.id }}"
+                        data-status="no-show">
                         <i class="fas fa-user-slash"></i> Mark as No-Show
                     </button>
                     {% endif %}
@@ -110,9 +116,10 @@
             <div class="col-md-6">
                 <h6 class="text-muted">Manage Consultation</h6>
                 <div class="btn-group-vertical w-100" role="group">
-                    <a href="{{ url_for('doctor.manage_prescription', appointment_id=appointment.id) }}" 
-                       class="btn btn-info">
-                        <i class="fas fa-file-medical"></i> {{ 'Edit' if appointment.prescription else 'Add' }} Prescription
+                    <a href="{{ url_for('doctor.manage_prescription', appointment_id=appointment.id) }}"
+                        class="btn btn-info">
+                        <i class="fas fa-file-medical"></i> {{ 'Edit' if appointment.prescription else 'Add' }}
+                        Prescription
                     </a>
                     {% if appointment.consultation_mode == 'online' %}
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#videoLinkModal">
@@ -145,38 +152,39 @@
                 <p>{{ appointment.prescription.symptoms or 'Not recorded' }}</p>
             </div>
         </div>
-        
+
         <div class="mb-3">
             <h6 class="text-muted">Medicines</h6>
             {% if appointment.prescription.get_medicines_list() %}
-                {% for medicine_item in appointment.prescription.get_medicines_list() %}
-                <div class="prescription-item mb-2">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <strong>{{ medicine_item.medicine.name }}</strong>
-                            <div class="text-muted small">{{ medicine_item.full_instruction }}</div>
-                        </div>
-                        <span class="badge bg-primary">{{ medicine_item.medicine.strength or '' }}</span>
+            {% for medicine_item in appointment.prescription.get_medicines_list() %}
+            <div class="prescription-item mb-2">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <strong>{{ medicine_item.medicine.name }}</strong>
+                        <div class="text-muted small">{{ medicine_item.full_instruction }}</div>
                     </div>
+                    <span class="badge bg-primary">{{ medicine_item.medicine.strength or '' }}</span>
                 </div>
-                {% endfor %}
+            </div>
+            {% endfor %}
             {% else %}
             <p class="text-muted">No medicines prescribed</p>
             {% endif %}
         </div>
-        
+
         {% if appointment.prescription.follow_up_instructions %}
         <div class="row mb-3">
             <div class="col-12">
                 <h6 class="text-muted">Follow-up Instructions</h6>
                 <p>{{ appointment.prescription.follow_up_instructions }}</p>
                 {% if appointment.prescription.follow_up_date %}
-                <p class="mb-0"><strong>Follow-up Date:</strong> {{ appointment.prescription.follow_up_date.strftime('%B %d, %Y') }}</p>
+                <p class="mb-0"><strong>Follow-up Date:</strong>
+                    {{ appointment.prescription.follow_up_date.strftime('%B %d, %Y') }}</p>
                 {% endif %}
             </div>
         </div>
         {% endif %}
-        
+
         {% if appointment.prescription.notes %}
         <div class="row">
             <div class="col-12">
@@ -202,14 +210,14 @@
                 <form method="POST" action="{{ url_for('doctor.add_video_link', appointment_id=appointment.id) }}">
                     <div class="mb-3">
                         <label for="video_link" class="form-label">Video Consultation Link</label>
-                        <input type="url" class="form-control" id="video_link" name="video_link" 
-                               placeholder="https://meet.jit.si/room-name" required
-                               value="{{ appointment.video_link or '' }}">
+                        <input type="url" class="form-control" id="video_link" name="video_link"
+                            placeholder="https://meet.jit.si/room-name" required
+                            value="{{ appointment.video_link or '' }}">
                         <div class="form-text">
                             Provide a secure video consultation link (Jitsi Meet, Zoom, Google Meet, etc.)
                         </div>
                     </div>
-                    
+
                     {% if appointment.video_link %}
                     <div class="alert alert-info">
                         <h6 class="alert-heading">Current Video Link</h6>
@@ -218,7 +226,7 @@
                         </p>
                     </div>
                     {% endif %}
-                    
+
                     <div class="alert alert-warning">
                         <h6 class="alert-heading">Important</h6>
                         <ul class="mb-0">
@@ -227,7 +235,7 @@
                             <li>Test the link before providing it to the patient</li>
                         </ul>
                     </div>
-                    
+
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">
@@ -249,25 +257,26 @@
     <div class="card-body">
         {% set recent_appointments = appointment.patient.get_past_appointments(limit=5) %}
         {% if recent_appointments %}
-            {% for past_appointment in recent_appointments %}
-                {% if past_appointment.id != appointment.id %}
-                <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
-                    <div>
-                        <div class="fw-bold">{{ past_appointment.date.strftime('%b %d, %Y') }}</div>
-                        <div class="text-muted">{{ past_appointment.time_display }}</div>
-                        <div class="small">{{ past_appointment.doctor.full_name }} - {{ past_appointment.doctor.speciality.name }}</div>
-                    </div>
-                    <div class="text-end">
-                        <span class="badge bg-{{ 'success' if past_appointment.status == 'completed' else 'danger' }}">
-                            {{ past_appointment.status_display }}
-                        </span>
-                        {% if past_appointment.prescription %}
-                        <br><small class="text-muted">Prescription available</small>
-                        {% endif %}
-                    </div>
-                </div>
+        {% for past_appointment in recent_appointments %}
+        {% if past_appointment.id != appointment.id %}
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+            <div>
+                <div class="fw-bold">{{ past_appointment.date.strftime('%b %d, %Y') }}</div>
+                <div class="text-muted">{{ past_appointment.time_display }}</div>
+                <div class="small">{{ past_appointment.doctor.full_name }} -
+                    {{ past_appointment.doctor.speciality.name }}</div>
+            </div>
+            <div class="text-end">
+                <span class="badge bg-{{ 'success' if past_appointment.status == 'completed' else 'danger' }}">
+                    {{ past_appointment.status_display }}
+                </span>
+                {% if past_appointment.prescription %}
+                <br><small class="text-muted">Prescription available</small>
                 {% endif %}
-            {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
         {% else %}
         <p class="text-muted mb-0">No previous appointments found</p>
         {% endif %}
@@ -277,28 +286,28 @@
 
 {% block scripts %}
 <script>
-function updateStatus(appointmentId, status) {
-    fetch(`/doctor/appointment/${appointmentId}/update_status`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: `status=${status}`
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showAlert(`Appointment status updated to ${status.replace('_', ' ').title()}`, 'success');
-            setTimeout(() => location.reload(), 1500);
-        } else {
-            showAlert('Failed to update status', 'danger');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showAlert('An error occurred', 'danger');
-    });
-}
+    function updateStatus(appointmentId, status) {
+        fetch(`/doctor/appointment/${appointmentId}/update_status`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: `status=${status}`
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert(`Appointment status updated to ${status.replace('_', ' ').title()}`, 'success');
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showAlert('Failed to update status', 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('An error occurred', 'danger');
+            });
+    }
 </script>
 {% endblock %}

@@ -32,17 +32,18 @@
                 <h6 class="text-muted">Medical Information</h6>
                 <p class="mb-1"><strong>Blood Group:</strong> {{ patient.blood_group or 'Not specified' }}</p>
                 <p class="mb-1"><strong>Allergies:</strong> {{ patient.allergies or 'None recorded' }}</p>
-                <p class="mb-0"><strong>Emergency Contact:</strong> {{ patient.emergency_contact_name or 'Not specified' }}</p>
+                <p class="mb-0"><strong>Emergency Contact:</strong>
+                    {{ patient.emergency_contact_name or 'Not specified' }}</p>
             </div>
             <div class="col-md-4">
                 <h6 class="text-muted">Statistics</h6>
                 <p class="mb-1"><strong>Total Consultations:</strong> {{ patient.appointments.count() }}</p>
                 <p class="mb-1"><strong>Prescriptions:</strong> {{ patient.prescriptions.count() }}</p>
-                <p class="mb-0"><strong>Last Visit:</strong> 
+                <p class="mb-0"><strong>Last Visit:</strong>
                     {% if last_appointment %}
-                        {{ last_appointment.date.strftime('%b %d, %Y') }}
+                    {{ last_appointment.date.strftime('%b %d, %Y') }}
                     {% else %}
-                        No previous visits
+                    No previous visits
                     {% endif %}
                 </p>
             </div>
@@ -60,99 +61,99 @@
     </div>
     <div class="card-body">
         {% if prescriptions %}
-            {% for prescription in prescriptions %}
-            <div class="prescription-card mb-4 p-3 border rounded">
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div>
-                                <h6 class="mb-1">{{ prescription.doctor.full_name }}</h6>
-                                <small class="text-muted">{{ prescription.doctor.speciality.name }}</small>
-                            </div>
-                            <div class="text-end">
-                                <small class="text-muted">{{ prescription.created_at.strftime('%b %d, %Y') }}</small>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-2">
-                            <span class="badge bg-info">Diagnosis</span>
-                            <p class="mb-0 mt-1">{{ prescription.diagnosis }}</p>
-                        </div>
-                        
-                        {% if prescription.symptoms %}
-                        <div class="mb-2">
-                            <span class="badge bg-warning">Symptoms</span>
-                            <p class="mb-0 mt-1">{{ prescription.symptoms }}</p>
-                        </div>
-                        {% endif %}
-                        
-                        {% if prescription.get_medicines_list() %}
-                        <div class="mb-2">
-                            <span class="badge bg-primary">Medicines</span>
-                            <div class="mt-1">
-                                {% for medicine_item in prescription.get_medicines_list() %}
-                                <div class="medicine-item small">
-                                    <strong>{{ medicine_item.medicine.name }}</strong>
-                                    {% if medicine_item.medicine.strength %}
-                                    <span class="badge bg-secondary ms-1">{{ medicine_item.medicine.strength }}</span>
-                                    {% endif %}
-                                    <div class="text-muted">{{ medicine_item.full_instruction }}</div>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-                        
-                        {% if prescription.follow_up_instructions %}
-                        <div class="mb-2">
-                            <span class="badge bg-success">Follow-up Instructions</span>
-                            <p class="mb-0 mt-1">{{ prescription.follow_up_instructions }}</p>
-                            {% if prescription.follow_up_date %}
-                            <small class="text-muted">Follow-up date: {{ prescription.follow_up_date.strftime('%b %d, %Y') }}</small>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-                        
-                        {% if prescription.notes %}
+        {% for prescription in prescriptions %}
+        <div class="prescription-card mb-4 p-3 border rounded">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
                         <div>
-                            <span class="badge bg-secondary">Doctor's Notes</span>
-                            <p class="mb-0 mt-1">{{ prescription.notes }}</p>
+                            <h6 class="mb-1">{{ prescription.doctor.full_name }}</h6>
+                            <small class="text-muted">{{ prescription.doctor.speciality.name }}</small>
                         </div>
+                        <div class="text-end">
+                            <small class="text-muted">{{ prescription.created_at.strftime('%b %d, %Y') }}</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <span class="badge bg-info">Diagnosis</span>
+                        <p class="mb-0 mt-1">{{ prescription.diagnosis }}</p>
+                    </div>
+
+                    {% if prescription.symptoms %}
+                    <div class="mb-2">
+                        <span class="badge bg-warning">Symptoms</span>
+                        <p class="mb-0 mt-1">{{ prescription.symptoms }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if prescription.get_medicines_list() %}
+                    <div class="mb-2">
+                        <span class="badge bg-primary">Medicines</span>
+                        <div class="mt-1">
+                            {% for medicine_item in prescription.get_medicines_list() %}
+                            <div class="medicine-item small">
+                                <strong>{{ medicine_item.medicine.name }}</strong>
+                                {% if medicine_item.medicine.strength %}
+                                <span class="badge bg-secondary ms-1">{{ medicine_item.medicine.strength }}</span>
+                                {% endif %}
+                                <div class="text-muted">{{ medicine_item.full_instruction }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if prescription.follow_up_instructions %}
+                    <div class="mb-2">
+                        <span class="badge bg-success">Follow-up Instructions</span>
+                        <p class="mb-0 mt-1">{{ prescription.follow_up_instructions }}</p>
+                        {% if prescription.follow_up_date %}
+                        <small class="text-muted">Follow-up date:
+                            {{ prescription.follow_up_date.strftime('%b %d, %Y') }}</small>
                         {% endif %}
                     </div>
-                    
-                    <div class="col-md-4">
-                        <div class="text-end">
-                            <a href="{{ url_for('patient.prescription_detail', prescription_id=prescription.id) }}" 
-                               class="btn btn-outline-success btn-sm">
-                                <i class="fas fa-eye"></i> View Details
-                            </a>
-                            <button class="btn btn-outline-primary btn-sm ms-1" 
-                            data-action="printPrescription" 
+                    {% endif %}
+
+                    {% if prescription.notes %}
+                    <div>
+                        <span class="badge bg-secondary">Doctor's Notes</span>
+                        <p class="mb-0 mt-1">{{ prescription.notes }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-4">
+                    <div class="text-end">
+                        <a href="{{ url_for('patient.prescription_detail', prescription_id=prescription.id) }}"
+                            class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                        <button class="btn btn-outline-primary btn-sm ms-1" data-action="printPrescription"
                             data-prescription-id="{{ prescription.id }}">
                             <i class="fas fa-print"></i> Print
                         </button>
-                        </div>
-                        
-                        <div class="mt-2">
-                            <small class="text-muted">
-                                Appointment: {{ prescription.appointment.date.strftime('%b %d, %Y') }}<br>
-                                {{ prescription.appointment.time_display }}
-                            </small>
-                        </div>
+                    </div>
+
+                    <div class="mt-2">
+                        <small class="text-muted">
+                            Appointment: {{ prescription.appointment.date.strftime('%b %d, %Y') }}<br>
+                            {{ prescription.appointment.time_display }}
+                        </small>
                     </div>
                 </div>
             </div>
-            {% endfor %}
+        </div>
+        {% endfor %}
         {% else %}
-            <div class="text-center py-5">
-                <i class="fas fa-file-medical fa-3x text-muted mb-3"></i>
-                <h5 class="text-muted">No Medical History</h5>
-                <p class="text-muted">You don't have any prescription records yet.</p>
-                <a href="{{ url_for('patient.doctors') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Book an Appointment
-                </a>
-            </div>
+        <div class="text-center py-5">
+            <i class="fas fa-file-medical fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No Medical History</h5>
+            <p class="text-muted">You don't have any prescription records yet.</p>
+            <a href="{{ url_for('patient.doctors') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Book an Appointment
+            </a>
+        </div>
         {% endif %}
     </div>
 </div>
@@ -166,31 +167,33 @@
             </div>
             <div class="card-body">
                 {% if prescriptions %}
-                    {% set diagnoses = prescriptions|map(attribute='diagnosis')|list %}
-                    {% set unique_conditions = [] %}
-                    {% for diagnosis in diagnoses %}
-                        {% if diagnosis not in unique_conditions %}
-                            {% set _ = unique_conditions.append(diagnosis) %}
-                        {% endif %}
-                    {% endfor %}
-                    
-                    {% if unique_conditions %}
-                        {% for condition in unique_conditions[:5] %}
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span>{{ condition }}</span>
-                            <span class="badge bg-primary">{{ diagnoses|selectattr('diagnosis', 'equalto', condition)|list|length }} times</span>
-                        </div>
-                        {% endfor %}
-                    {% else %}
-                    <p class="text-muted mb-0">No conditions recorded</p>
-                    {% endif %}
+                {% set diagnoses = prescriptions|map(attribute='diagnosis')|list %}
+                {% set unique_conditions = [] %}
+                {% for diagnosis in diagnoses %}
+                {% if diagnosis not in unique_conditions %}
+                {% set _ = unique_conditions.append(diagnosis) %}
+                {% endif %}
+                {% endfor %}
+
+                {% if unique_conditions %}
+                {% for condition in unique_conditions[:5] %}
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span>{{ condition }}</span>
+                    <span
+                        class="badge bg-primary">{{ diagnoses|selectattr('diagnosis', 'equalto', condition)|list|length }}
+                        times</span>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="text-muted mb-0">No conditions recorded</p>
+                {% endif %}
                 {% else %}
                 <p class="text-muted mb-0">No conditions recorded</p>
                 {% endif %}
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-6">
         <div class="card shadow">
             <div class="card-header bg-light">
@@ -198,30 +201,31 @@
             </div>
             <div class="card-body">
                 {% if prescriptions %}
-                    {% set all_medicines = [] %}
-                    {% for prescription in prescriptions %}
-                        {% for medicine_item in prescription.get_medicines_list() %}
-                            {% set _ = all_medicines.append(medicine_item.medicine.name) %}
-                        {% endfor %}
-                    {% endfor %}
-                    
-                    {% set unique_medicines = [] %}
-                    {% for medicine in all_medicines %}
-                        {% if medicine not in unique_medicines %}
-                            {% set _ = unique_medicines.append(medicine) %}
-                        {% endif %}
-                    {% endfor %}
-                    
-                    {% if unique_medicines %}
-                        {% for medicine in unique_medicines[:5] %}
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span>{{ medicine }}</span>
-                            <span class="badge bg-info">{{ all_medicines|selectattr('equalto', medicine)|list|length }} times</span>
-                        </div>
-                        {% endfor %}
-                    {% else %}
-                    <p class="text-muted mb-0">No medications recorded</p>
-                    {% endif %}
+                {% set all_medicines = [] %}
+                {% for prescription in prescriptions %}
+                {% for medicine_item in prescription.get_medicines_list() %}
+                {% set _ = all_medicines.append(medicine_item.medicine.name) %}
+                {% endfor %}
+                {% endfor %}
+
+                {% set unique_medicines = [] %}
+                {% for medicine in all_medicines %}
+                {% if medicine not in unique_medicines %}
+                {% set _ = unique_medicines.append(medicine) %}
+                {% endif %}
+                {% endfor %}
+
+                {% if unique_medicines %}
+                {% for medicine in unique_medicines[:5] %}
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span>{{ medicine }}</span>
+                    <span class="badge bg-info">{{ all_medicines|selectattr('equalto', medicine)|list|length }}
+                        times</span>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="text-muted mb-0">No medications recorded</p>
+                {% endif %}
                 {% else %}
                 <p class="text-muted mb-0">No medications recorded</p>
                 {% endif %}
@@ -276,24 +280,24 @@
 
 {% block scripts %}
 <script>
-// Handle print prescription functionality
-document.addEventListener('click', function(e) {
-    if (e.target.closest('[data-action="printPrescription"]')) {
-        const button = e.target.closest('[data-action="printPrescription"]');
-        const prescriptionId = button.getAttribute('data-prescription-id');
-        printPrescription(prescriptionId);
+    // Handle print prescription functionality
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('[data-action="printPrescription"]')) {
+            const button = e.target.closest('[data-action="printPrescription"]');
+            const prescriptionId = button.getAttribute('data-prescription-id');
+            printPrescription(prescriptionId);
+        }
+    });
+
+    function printPrescription(prescriptionId) {
+        // For now, open the prescription detail page
+        // In a real implementation, this would open a print-friendly view
+        window.open("{{ url_for('patient.prescription_detail', prescription_id=0) }}".replace('0', prescriptionId), '_blank');
     }
-});
 
-function printPrescription(prescriptionId) {
-    // For now, open the prescription detail page
-    // In a real implementation, this would open a print-friendly view
-    window.open("{{ url_for('patient.prescription_detail', prescription_id=0) }}".replace('0', prescriptionId), '_blank');
-}
-
-// Auto-refresh medical history every 5 minutes (optional)
-// setInterval(() => {
-//     location.reload();
-// }, 300000);
+    // Auto-refresh medical history every 5 minutes (optional)
+    // setInterval(() => {
+    //     location.reload();
+    // }, 300000);
 </script>
 {% endblock %}

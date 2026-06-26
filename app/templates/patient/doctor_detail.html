@@ -40,7 +40,7 @@
                             <p class="text-muted">No qualifications information available.</p>
                             {% endif %}
                         </div>
-                        
+
                         <div class="row mb-4">
                             <div class="col-md-6">
                                 <h6 class="text-muted">Experience</h6>
@@ -51,25 +51,27 @@
                                 <p class="h4 text-primary">${{ "%.2f"|format(doctor.consultation_fee) }}</p>
                             </div>
                         </div>
-                        
+
                         <div class="mb-4">
                             <h6 class="text-muted">Consultation Mode</h6>
                             <div class="d-flex align-items-center">
                                 {% if doctor.consultation_mode == 'online' %}
                                 <div class="alert alert-info mb-0">
                                     <h6 class="alert-heading"><i class="fas fa-laptop"></i> Online Consultation</h6>
-                                    <p class="mb-0">Video consultation through secure platform. You will receive a video link after booking.</p>
+                                    <p class="mb-0">Video consultation through secure platform. You will receive a video
+                                        link after booking.</p>
                                 </div>
                                 {% else %}
                                 <div class="alert alert-secondary mb-0">
                                     <h6 class="alert-heading"><i class="fas fa-hospital"></i> Offline Consultation</h6>
-                                    <p class="mb-0">In-person consultation at the hospital/clinic. Please arrive 15 minutes before your appointment time.</p>
+                                    <p class="mb-0">In-person consultation at the hospital/clinic. Please arrive 15
+                                        minutes before your appointment time.</p>
                                 </div>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-4">
                         <div class="text-center">
                             <div class="mb-3">
@@ -79,7 +81,7 @@
                                 <div class="h5 mb-1">{{ doctor.speciality.name }}</div>
                                 <div class="text-muted">{{ doctor.consultation_mode.title() }} Specialist</div>
                             </div>
-                            
+
                             <div class="mb-3">
                                 <div class="d-flex justify-content-center align-items-center">
                                     <i class="fas fa-star text-warning me-1"></i>
@@ -87,11 +89,12 @@
                                     <small class="text-muted ms-1">(124 reviews)</small>
                                 </div>
                             </div>
-                            
+
                             <div class="mb-3">
                                 <small class="text-muted">
-                                    <i class="fas fa-calendar-check"></i> 
-                                    {{ doctor.appointments.filter_by(status='completed').count() }} appointments completed
+                                    <i class="fas fa-calendar-check"></i>
+                                    {{ doctor.appointments.filter_by(status='completed').count() }} appointments
+                                    completed
                                 </small>
                             </div>
                         </div>
@@ -99,7 +102,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Statistics -->
         <div class="card shadow mb-4">
             <div class="card-header">
@@ -112,7 +115,8 @@
                         <small class="text-muted">Total Appointments</small>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <div class="h4 text-success">{{ doctor.appointments.filter_by(status='completed').count() }}</div>
+                        <div class="h4 text-success">{{ doctor.appointments.filter_by(status='completed').count() }}
+                        </div>
                         <small class="text-muted">Completed</small>
                     </div>
                     <div class="col-md-3 mb-3">
@@ -127,7 +131,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-lg-4">
         <!-- Quick Actions -->
         <div class="card shadow mb-4">
@@ -136,8 +140,7 @@
             </div>
             <div class="card-body">
                 <div class="d-grid gap-2">
-                    <a href="{{ url_for('patient.book_appointment', doctor_id=doctor.id) }}" 
-                       class="btn btn-success">
+                    <a href="{{ url_for('patient.book_appointment', doctor_id=doctor.id) }}" class="btn btn-success">
                         <i class="fas fa-calendar-plus"></i> Book Appointment
                     </a>
                     <button class="btn btn-outline-info" disabled>
@@ -149,7 +152,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Available Shifts -->
         <div class="card shadow mb-4">
             <div class="card-header">
@@ -157,37 +160,39 @@
             </div>
             <div class="card-body">
                 {% if available_shifts %}
-                    {% for shift in available_shifts %}
-                    <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
-                        <div>
-                            <div class="fw-bold">{{ shift.date.strftime('%a, %b %d') }}</div>
-                            <div class="small text-muted">{{ shift.shift_display }}</div>
-                                                            <div class="small">
-                                <span class="badge bg-{{ 'primary' if shift.consultation_mode == 'online' else 'secondary' }}">
-                                    {{ shift.consultation_mode.title() }}
-                                </span>
-                                <span class="text-muted ms-2">{{ shift.get_booked_count() }}/{{ shift.max_patients }} booked</span>
-                            </div>
+                {% for shift in available_shifts %}
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                    <div>
+                        <div class="fw-bold">{{ shift.date.strftime('%a, %b %d') }}</div>
+                        <div class="small text-muted">{{ shift.shift_display }}</div>
+                        <div class="small">
+                            <span
+                                class="badge bg-{{ 'primary' if shift.consultation_mode == 'online' else 'secondary' }}">
+                                {{ shift.consultation_mode.title() }}
+                            </span>
+                            <span class="text-muted ms-2">{{ shift.get_booked_count() }}/{{ shift.max_patients }}
+                                booked</span>
                         </div>
-                        <div>
-                            {% if shift.get_booked_count() < shift.max_patients %}
-                            <a href="{{ url_for('patient.book_appointment', doctor_id=doctor.id) }}?shift_id={{ shift.id }}" 
-                               class="btn btn-sm btn-outline-primary">View Slots</a>
+                    </div>
+                    <div>
+                        {% if shift.get_booked_count() < shift.max_patients %} <a
+                            href="{{ url_for('patient.book_appointment', doctor_id=doctor.id) }}?shift_id={{ shift.id }}"
+                            class="btn btn-sm btn-outline-primary">View Slots</a>
                             {% else %}
                             <span class="badge bg-danger">Full</span>
                             {% endif %}
-                        </div>
                     </div>
-                    {% endfor %}
+                </div>
+                {% endfor %}
                 {% else %}
-                    <div class="text-center py-3">
-                        <i class="fas fa-calendar-times fa-2x text-muted mb-2"></i>
-                        <p class="text-muted mb-0">No available shifts in the next 7 days</p>
-                    </div>
+                <div class="text-center py-3">
+                    <i class="fas fa-calendar-times fa-2x text-muted mb-2"></i>
+                    <p class="text-muted mb-0">No available shifts in the next 7 days</p>
+                </div>
                 {% endif %}
             </div>
         </div>
-        
+
         <!-- Contact Information -->
         <div class="card shadow">
             <div class="card-header">

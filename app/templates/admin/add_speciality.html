@@ -25,17 +25,18 @@
                     <div class="mb-3">
                         <label for="name" class="form-label">Speciality Name *</label>
                         <input type="text" class="form-control" id="name" name="name" required
-                               placeholder="e.g., Cardiology, Neurology, Pediatrics">
+                            placeholder="e.g., Cardiology, Neurology, Pediatrics">
                         <div class="form-text">Enter the medical speciality name</div>
                     </div>
-                    
+
                     <div class="mb-4">
                         <label for="description" class="form-label">Description</label>
                         <textarea class="form-control" id="description" name="description" rows="4"
-                                  placeholder="Brief description of the medical speciality..."></textarea>
-                        <div class="form-text">Optional: Provide a brief description of what this speciality covers</div>
+                            placeholder="Brief description of the medical speciality..."></textarea>
+                        <div class="form-text">Optional: Provide a brief description of what this speciality covers
+                        </div>
                     </div>
-                    
+
                     <!-- Guidelines -->
                     <div class="alert alert-info mb-4">
                         <h6 class="alert-heading"><i class="fas fa-info-circle"></i> Guidelines</h6>
@@ -46,7 +47,7 @@
                             <li>Provide clear descriptions for patient understanding</li>
                         </ul>
                     </div>
-                    
+
                     <!-- Form Actions -->
                     <div class="d-flex justify-content-between">
                         <a href="{{ url_for('admin.specialities') }}" class="btn btn-secondary">
@@ -113,40 +114,40 @@
 
 {% block scripts %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
-    const nameInput = document.getElementById('name');
-    
-    // Form validation
-    form.addEventListener('submit', function(e) {
-        const name = nameInput.value.trim();
-        
-        // Basic validation
-        if (name.length < 2) {
-            e.preventDefault();
-            showAlert('Speciality name must be at least 2 characters long', 'danger');
-            return false;
-        }
-        
-        // Check for special characters (only allow letters, spaces, and hyphens)
-        if (!/^[a-zA-Z\s\-]+$/.test(name)) {
-            e.preventDefault();
-            showAlert('Speciality name can only contain letters, spaces, and hyphens', 'danger');
-            return false;
-        }
-        
-        // Show loading state
-        const submitBtn = form.querySelector('button[type="submit"]');
-        showLoading(submitBtn);
-    });
-    
-    // Auto-format name input
-    nameInput.addEventListener('input', function() {
-        // Convert to title case
-        this.value = this.value.replace(/\b\w/g, function(match) {
-            return match.toUpperCase();
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form');
+        const nameInput = document.getElementById('name');
+
+        // Form validation
+        form.addEventListener('submit', function (e) {
+            const name = nameInput.value.trim();
+
+            // Basic validation
+            if (name.length < 2) {
+                e.preventDefault();
+                showAlert('Speciality name must be at least 2 characters long', 'danger');
+                return false;
+            }
+
+            // Check for special characters (only allow letters, spaces, and hyphens)
+            if (!/^[a-zA-Z\s\-]+$/.test(name)) {
+                e.preventDefault();
+                showAlert('Speciality name can only contain letters, spaces, and hyphens', 'danger');
+                return false;
+            }
+
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            showLoading(submitBtn);
+        });
+
+        // Auto-format name input
+        nameInput.addEventListener('input', function () {
+            // Convert to title case
+            this.value = this.value.replace(/\b\w/g, function (match) {
+                return match.toUpperCase();
+            });
         });
     });
-});
 </script>
 {% endblock %}

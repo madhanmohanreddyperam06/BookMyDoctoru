@@ -2,108 +2,279 @@
 
 {% block title %}Profile - Doctor Appointment System{% endblock %}
 
+{% block styles %}
+<style>
+    .profile-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .profile-header {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        border-radius: 12px 12px 0 0;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="15" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="10" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="50" r="8" fill="rgba(255,255,255,0.1)"/></svg>');
+        opacity: 0.3;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        position: relative;
+        z-index: 1;
+    }
+
+    .profile-avatar i {
+        font-size: 48px;
+        color: white;
+    }
+
+    .profile-info {
+        position: relative;
+        z-index: 1;
+    }
+
+    .profile-body {
+        background: white;
+        border-radius: 0 0 12px 12px;
+        padding: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-section {
+        margin-bottom: 30px;
+    }
+
+    .profile-section-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #007bff;
+    }
+
+    .profile-field {
+        margin-bottom: 20px;
+    }
+
+    .profile-field label {
+        display: block;
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .profile-field input,
+    .profile-field select,
+    .profile-field textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 15px;
+        background: #f8f9fa;
+        color: #6c757d;
+        cursor: not-allowed;
+    }
+
+    .profile-field input:disabled,
+    .profile-field select:disabled,
+    .profile-field textarea:disabled {
+        background: #f8f9fa;
+        border-color: #e9ecef;
+        color: #6c757d;
+        cursor: not-allowed;
+    }
+
+    .profile-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: flex-end;
+        padding-top: 20px;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .btn-profile {
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .btn-logout {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-logout:hover {
+        background: #c82333;
+        transform: translateY(-1px);
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .row-fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+        .row-fields {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-actions {
+            flex-direction: column;
+        }
+
+        .btn-profile {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">My Profile</h4>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4 text-center">
-                        <div class="mb-3">
-                            <i class="fas fa-user-circle fa-5x text-primary"></i>
-                        </div>
-                        <h5>{{ user.email }}</h5>
-                        <span class="badge bg-primary">{{ user.role.title() }}</span>
-                    </div>
-                    <div class="col-md-8">
-                        {% if profile %}
-                            {% if user.is_admin() %}
-                                <div class="row">
-                                    <div class="col-sm-6 mb-3">
-                                        <label class="form-label">Full Name</label>
-                                        <p class="form-control-plaintext">{{ profile.full_name }}</p>
-                                    </div>
-                                    <div class="col-sm-6 mb-3">
-                                        <label class="form-label">Phone</label>
-                                        <p class="form-control-plaintext">{{ profile.phone or 'Not provided' }}</p>
-                                    </div>
-                                </div>
-                            {% elif user.is_doctor() %}
-                                <div class="row">
-                                    <div class="col-sm-6 mb-3">
-                                        <label class="form-label">Full Name</label>
-                                        <p class="form-control-plaintext">{{ profile.full_name }}</p>
-                                    </div>
-                                    <div class="col-sm-6 mb-3">
-                                        <label class="form-label">Phone</label>
-                                        <p class="form-control-plaintext">{{ profile.phone or 'Not provided' }}</p>
-                                    </div>
-                                    <div class="col-sm-6 mb-3">
-                                        <label class="form-label">Speciality</label>
-                                        <p class="form-control-plaintext">{{ profile.speciality.name if profile.speciality else 'Not assigned' }}</p>
-                                    </div>
-                                    <div class="col-sm-6 mb-3">
-                                        <label class="form-label">Consultation Mode</label>
-                                        <p class="form-control-plaintext">{{ profile.consultation_mode.title() }}</p>
-                                    </div>
-                                    <div class="col-sm-12 mb-3">
-                                        <label class="form-label">Qualifications</label>
-                                        <p class="form-control-plaintext">{{ profile.qualifications or 'Not provided' }}</p>
-                                    </div>
-                                </div>
-                            {% elif user.is_patient() %}
-                                <div class="row">
-                                    <div class="col-sm-6 mb-3">
-                                        <label class="form-label">Full Name</label>
-                                        <p class="form-control-plaintext">{{ profile.full_name }}</p>
-                                    </div>
-                                    <div class="col-sm-6 mb-3">
-                                        <label class="form-label">Phone</label>
-                                        <p class="form-control-plaintext">{{ profile.phone or 'Not provided' }}</p>
-                                    </div>
-                                    <div class="col-sm-6 mb-3">
-                                        <label class="form-label">Date of Birth</label>
-                                        <p class="form-control-plaintext">{{ profile.date_of_birth.strftime('%d-%m-%Y') if profile.date_of_birth else 'Not provided' }}</p>
-                                    </div>
-                                    <div class="col-sm-6 mb-3">
-                                        <label class="form-label">Gender</label>
-                                        <p class="form-control-plaintext">{{ profile.gender.title() if profile.gender else 'Not provided' }}</p>
-                                    </div>
-                                    <div class="col-sm-12 mb-3">
-                                        <label class="form-label">Blood Group</label>
-                                        <p class="form-control-plaintext">{{ profile.blood_group or 'Not provided' }}</p>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        {% else %}
-                            <div class="alert alert-warning">
-                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                Profile information not available. Please contact administrator.
-                            </div>
-                        {% endif %}
-                        
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <label class="form-label">Account Created</label>
-                                <p class="form-control-plaintext">{{ user.created_at.strftime('%d-%m-%Y %H:%M') if user.created_at else 'Unknown' }}</p>
-                            </div>
-                        </div>
-                    </div>
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-avatar">
+            <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="profile-info">
+            <h3 class="mb-2">{{ current_user.email }}</h3>
+            <span class="status-badge">{{ current_user.role.title() }}</span>
+        </div>
+    </div>
+
+    <div class="profile-body">
+        <!-- Personal Information Section -->
+        <div class="profile-section">
+            <h4 class="profile-section-title">
+                <i class="fas fa-user me-2"></i>Personal Information
+            </h4>
+
+            <div class="row-fields">
+                <div class="profile-field">
+                    <label for="full_name">Full Name</label>
+                    <input type="text" id="full_name" name="full_name"
+                        value="{{ profile.full_name if profile else 'Not provided' }}" disabled>
+                </div>
+
+                <div class="profile-field">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" value="{{ profile.phone if profile else 'Not provided' }}"
+                        disabled>
                 </div>
             </div>
-            <div class="card-footer">
-                <div class="d-flex justify-content-between">
-                    <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-danger">
-                        <i class="fas fa-sign-out-alt me-2"></i>Logout
-                    </a>
-                    <button class="btn btn-primary" disabled>
-                        <i class="fas fa-edit me-2"></i>Edit Profile (Coming Soon)
-                    </button>
+
+            {% if current_user.is_patient() %}
+            <div class="row-fields">
+                <div class="profile-field">
+                    <label for="date_of_birth">Date of Birth</label>
+                    <input type="text" id="date_of_birth" name="date_of_birth"
+                        value="{{ profile.date_of_birth.strftime('%d-%m-%Y') if profile and profile.date_of_birth else 'Not provided' }}"
+                        disabled>
+                </div>
+
+                <div class="profile-field">
+                    <label for="gender">Gender</label>
+                    <input type="text" id="gender" name="gender"
+                        value="{{ profile.gender.title() if profile and profile.gender else 'Not provided' }}" disabled>
                 </div>
             </div>
+
+            <div class="profile-field">
+                <label for="blood_group">Blood Group</label>
+                <input type="text" id="blood_group" name="blood_group"
+                    value="{{ profile.blood_group if profile else 'Not provided' }}" disabled>
+            </div>
+            {% endif %}
+
+            {% if current_user.is_doctor() %}
+            <div class="row-fields">
+                <div class="profile-field">
+                    <label for="speciality">Speciality</label>
+                    <input type="text" id="speciality" name="speciality"
+                        value="{{ profile.speciality.name if profile and profile.speciality else 'Not assigned' }}"
+                        disabled>
+                </div>
+
+                <div class="profile-field">
+                    <label for="consultation_mode">Consultation Mode</label>
+                    <input type="text" id="consultation_mode" name="consultation_mode"
+                        value="{{ profile.consultation_mode.title() if profile and profile.consultation_mode else 'Not specified' }}"
+                        disabled>
+                </div>
+            </div>
+
+            <div class="profile-field">
+                <label for="qualifications">Qualifications</label>
+                <textarea id="qualifications" name="qualifications" rows="3"
+                    disabled>{{ profile.qualifications if profile else 'Not provided' }}</textarea>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Account Information Section -->
+        <div class="profile-section">
+            <h4 class="profile-section-title">
+                <i class="fas fa-cog me-2"></i>Account Information
+            </h4>
+
+            <div class="profile-field">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" value="{{ current_user.email }}" disabled>
+            </div>
+
+            <div class="profile-field">
+                <label for="created_at">Account Created</label>
+                <input type="text" id="created_at" name="created_at"
+                    value="{{ current_user.created_at.strftime('%d-%m-%Y %H:%M') if current_user.created_at else 'Unknown' }}"
+                    disabled>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="profile-actions">
+            <a href="{{ url_for('auth.logout') }}" class="btn-profile btn-logout">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+            </a>
         </div>
     </div>
 </div>

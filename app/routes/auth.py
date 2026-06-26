@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from app.models import User, Admin, Doctor, Patient, Speciality
@@ -108,4 +108,7 @@ def landing():
 def profile():
     """User profile page"""
     user_profile = current_user.get_profile()
-    return render_template('auth/profile.html', user=current_user, profile=user_profile)
+    
+    return render_template('auth/profile.html', 
+                         user=current_user, 
+                         profile=user_profile)

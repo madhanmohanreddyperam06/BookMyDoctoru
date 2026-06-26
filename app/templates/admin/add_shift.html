@@ -32,10 +32,10 @@
                             <select class="form-select" id="doctor_id" name="doctor_id" required>
                                 <option value="">Choose a doctor</option>
                                 {% for doctor in doctors %}
-                                <option value="{{ doctor.id }}" 
-                                        data-mode="{{ doctor.consultation_mode }}"
-                                        data-fee="{{ doctor.consultation_fee }}">
-                                    {{ doctor.full_name }} - {{ doctor.speciality.name }} ({{ doctor.consultation_mode.title() }})
+                                <option value="{{ doctor.id }}" data-mode="{{ doctor.consultation_mode }}"
+                                    data-fee="{{ doctor.consultation_fee }}">
+                                    {{ doctor.full_name }} - {{ doctor.speciality.name }} ({{
+                                    doctor.consultation_mode.title() }})
                                 </option>
                                 {% endfor %}
                             </select>
@@ -70,8 +70,8 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="max_patients" class="form-label">Max Patients *</label>
-                            <input type="number" class="form-control" id="max_patients" name="max_patients" 
-                                   value="1" min="1" max="20" required>
+                            <input type="number" class="form-control" id="max_patients" name="max_patients" value="1"
+                                min="1" max="20" required>
                             <div class="form-text">Maximum patients per shift</div>
                         </div>
                     </div>
@@ -156,106 +156,107 @@
 
 {% block scripts %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const doctorSelect = document.getElementById('doctor_id');
-    const shiftTypeSelect = document.getElementById('shift_type');
-    const dateInput = document.getElementById('date');
-    const maxPatientsInput = document.getElementById('max_patients');
-    const slotDurationSelect = document.getElementById('slot_duration');
-    const customTimeSection = document.getElementById('custom_time_section');
-    const startTimeInput = document.getElementById('start_time');
-    const endTimeInput = document.getElementById('end_time');
-    const previewSection = document.getElementById('preview_section');
-    const previewContent = document.getElementById('preview_content');
-    
-    // Set minimum date to today
-    const today = new Date().toISOString().split('T')[0];
-    dateInput.min = today;
-    
-    // Doctor selection handler
-    doctorSelect.addEventListener('change', function() {
-        const selectedOption = this.options[this.selectedIndex];
-        const mode = selectedOption.dataset.mode;
-        const fee = selectedOption.dataset.fee;
-        
-        if (mode) {
-            document.getElementById('consultation_mode_display').textContent = mode.toUpperCase();
-            document.getElementById('consultation_mode_display').className = 
-                `badge bg-${mode === 'online' ? 'primary' : 'secondary'}`;
-        } else {
-            document.getElementById('consultation_mode_display').textContent = 'Select a doctor';
-            document.getElementById('consultation_mode_display').className = 'badge bg-secondary';
-        }
-        
-        updatePreview();
-    });
-    
-    // Shift type handler
-    shiftTypeSelect.addEventListener('change', function() {
-        const shiftType = this.value;
-        
-        if (shiftType === 'custom') {
-            customTimeSection.style.display = 'block';
-            startTimeInput.required = true;
-            endTimeInput.required = true;
-        } else {
-            customTimeSection.style.display = 'none';
-            startTimeInput.required = false;
-            endTimeInput.required = false;
-            
-            // Set default times for predefined shifts
-            switch (shiftType) {
-                case 'morning':
-                    startTimeInput.value = '09:00';
-                    endTimeInput.value = '13:00';
-                    break;
-                case 'evening':
-                    startTimeInput.value = '14:00';
-                    endTimeInput.value = '18:00';
-                    break;
-                case 'night':
-                    startTimeInput.value = '19:00';
-                    endTimeInput.value = '23:00';
-                    break;
+    document.addEventListener('DOMContentLoaded', function () {
+        const doctorSelect = document.getElementById('doctor_id');
+        const shiftTypeSelect = document.getElementById('shift_type');
+        const dateInput = document.getElementById('date');
+        const maxPatientsInput = document.getElementById('max_patients');
+        const slotDurationSelect = document.getElementById('slot_duration');
+        const customTimeSection = document.getElementById('custom_time_section');
+        const startTimeInput = document.getElementById('start_time');
+        const endTimeInput = document.getElementById('end_time');
+        const previewSection = document.getElementById('preview_section');
+        const previewContent = document.getElementById('preview_content');
+
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.min = today;
+
+        // Doctor selection handler
+        doctorSelect.addEventListener('change', function () {
+            const selectedOption = this.options[this.selectedIndex];
+            const mode = selectedOption.dataset.mode;
+            const fee = selectedOption.dataset.fee;
+
+            if (mode) {
+                document.getElementById('consultation_mode_display').textContent = mode.toUpperCase();
+                document.getElementById('consultation_mode_display').className =
+                    `badge bg-${mode === 'online' ? 'primary' : 'secondary'}`;
+            } else {
+                document.getElementById('consultation_mode_display').textContent = 'Select a doctor';
+                document.getElementById('consultation_mode_display').className = 'badge bg-secondary';
             }
-        }
-        
-        updatePreview();
-    });
-    
-    // Update preview when any field changes
-    [dateInput, maxPatientsInput, slotDurationSelect, startTimeInput, endTimeInput].forEach(element => {
-        element.addEventListener('change', updatePreview);
-    });
-    
-    function updatePreview() {
-        const doctor = doctorSelect.options[doctorSelect.selectedIndex];
-        const date = dateInput.value;
-        const shiftType = shiftTypeSelect.value;
-        const maxPatients = maxPatientsInput.value;
-        const slotDuration = parseInt(slotDurationSelect.value);
-        const startTime = startTimeInput.value;
-        const endTime = endTimeInput.value;
-        
-        if (!doctor.value || !date || !shiftType || !maxPatients || !slotDuration || !startTime || !endTime) {
-            previewSection.style.display = 'none';
-            return;
-        }
-        
-        // Calculate duration and estimated slots
-        const start = new Date(`2000-01-01T${startTime}`);
-        const end = new Date(`2000-01-01T${endTime}`);
-        const durationMinutes = (end - start) / (1000 * 60);
-        const estimatedSlots = Math.floor(durationMinutes / slotDuration);
-        
-        // Update preview content
-        previewContent.innerHTML = `
+
+            updatePreview();
+        });
+
+        // Shift type handler
+        shiftTypeSelect.addEventListener('change', function () {
+            const shiftType = this.value;
+
+            if (shiftType === 'custom') {
+                customTimeSection.style.display = 'block';
+                startTimeInput.required = true;
+                endTimeInput.required = true;
+            } else {
+                customTimeSection.style.display = 'none';
+                startTimeInput.required = false;
+                endTimeInput.required = false;
+
+                // Set default times for predefined shifts
+                switch (shiftType) {
+                    case 'morning':
+                        startTimeInput.value = '09:00';
+                        endTimeInput.value = '13:00';
+                        break;
+                    case 'evening':
+                        startTimeInput.value = '14:00';
+                        endTimeInput.value = '18:00';
+                        break;
+                    case 'night':
+                        startTimeInput.value = '19:00';
+                        endTimeInput.value = '23:00';
+                        break;
+                }
+            }
+
+            updatePreview();
+        });
+
+        // Update preview when any field changes
+        [dateInput, maxPatientsInput, slotDurationSelect, startTimeInput, endTimeInput].forEach(element => {
+            element.addEventListener('change', updatePreview);
+        });
+
+        function updatePreview() {
+            const doctor = doctorSelect.options[doctorSelect.selectedIndex];
+            const date = dateInput.value;
+            const shiftType = shiftTypeSelect.value;
+            const maxPatients = maxPatientsInput.value;
+            const slotDuration = parseInt(slotDurationSelect.value);
+            const startTime = startTimeInput.value;
+            const endTime = endTimeInput.value;
+
+            if (!doctor.value || !date || !shiftType || !maxPatients || !slotDuration || !startTime || !endTime) {
+                previewSection.style.display = 'none';
+                return;
+            }
+
+            // Calculate duration and estimated slots
+            const start = new Date(`2000-01-01T${startTime}`);
+            const end = new Date(`2000-01-01T${endTime}`);
+            const durationMinutes = (end - start) / (1000 * 60);
+            const estimatedSlots = Math.floor(durationMinutes / slotDuration);
+
+            // Update preview content
+            previewContent.innerHTML = `
             <div class="row">
                 <div class="col-md-6">
                     <strong>Doctor:</strong> ${doctor.textContent.split(' - ')[0]}<br>
                     <strong>Speciality:</strong> ${doctor.textContent.split(' - ')[1]}<br>
-                    <strong>Date:</strong> ${new Date(date + 'T00:00:00').toLocaleDateString('en-US', { 
-                        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                    <strong>Date:</strong> ${new Date(date + 'T00:00:00').toLocaleDateString('en-US', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            })}
                 </div>
                 <div class="col-md-6">
                     <strong>Shift:</strong> ${shiftType.charAt(0).toUpperCase() + shiftType.slice(1)}<br>
@@ -266,38 +267,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
         `;
-        
-        document.getElementById('estimated_slots').textContent = `${estimatedSlots} slots`;
-        document.getElementById('estimated_slots').className = 'badge bg-info';
-        
-        previewSection.style.display = 'block';
-    }
-    
-    // Form validation
-    const form = document.querySelector('form');
-    form.addEventListener('submit', function(e) {
-        const startTime = new Date(`2000-01-01T${startTimeInput.value}`);
-        const endTime = new Date(`2000-01-01T${endTimeInput.value}`);
-        
-        if (startTime >= endTime) {
-            e.preventDefault();
-            showAlert('End time must be after start time', 'danger');
-            return false;
+
+            document.getElementById('estimated_slots').textContent = `${estimatedSlots} slots`;
+            document.getElementById('estimated_slots').className = 'badge bg-info';
+
+            previewSection.style.display = 'block';
         }
-        
-        const durationMinutes = (endTime - startTime) / (1000 * 60);
-        const slotDuration = parseInt(slotDurationSelect.value);
-        
-        if (durationMinutes < slotDuration) {
-            e.preventDefault();
-            showAlert('Shift duration must be at least as long as slot duration', 'danger');
-            return false;
-        }
-        
-        // Show loading state
-        const submitBtn = form.querySelector('button[type="submit"]');
-        showLoading(submitBtn);
+
+        // Form validation
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function (e) {
+            const startTime = new Date(`2000-01-01T${startTimeInput.value}`);
+            const endTime = new Date(`2000-01-01T${endTimeInput.value}`);
+
+            if (startTime >= endTime) {
+                e.preventDefault();
+                showAlert('End time must be after start time', 'danger');
+                return false;
+            }
+
+            const durationMinutes = (endTime - startTime) / (1000 * 60);
+            const slotDuration = parseInt(slotDurationSelect.value);
+
+            if (durationMinutes < slotDuration) {
+                e.preventDefault();
+                showAlert('Shift duration must be at least as long as slot duration', 'danger');
+                return false;
+            }
+
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            showLoading(submitBtn);
+        });
     });
-});
 </script>
 {% endblock %}

@@ -7,8 +7,8 @@
     <h1 class="h2">Manage Prescription</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group me-2">
-            <a href="{{ url_for('doctor.appointment_detail', appointment_id=appointment.id) }}" 
-               class="btn btn-sm btn-outline-secondary">
+            <a href="{{ url_for('doctor.appointment_detail', appointment_id=appointment.id) }}"
+                class="btn btn-sm btn-outline-secondary">
                 <i class="fas fa-arrow-left"></i> Back to Appointment
             </a>
         </div>
@@ -38,12 +38,13 @@
                 <h6>Appointment Information</h6>
                 <p class="mb-1"><strong>{{ appointment.date.strftime('%B %d, %Y') }}</strong></p>
                 <p class="mb-1">Time: {{ appointment.time_display }}</p>
-                <p class="mb-1">Mode: 
-                    <span class="badge bg-{{ 'primary' if appointment.consultation_mode == 'online' else 'secondary' }}">
+                <p class="mb-1">Mode:
+                    <span
+                        class="badge bg-{{ 'primary' if appointment.consultation_mode == 'online' else 'secondary' }}">
                         {{ appointment.consultation_mode.title() }}
                     </span>
                 </p>
-                <p class="mb-1">Status: 
+                <p class="mb-1">Status:
                     <span class="badge bg-{{ 'success' if appointment.status == 'completed' else 'warning' }}">
                         {{ appointment.status_display }}
                     </span>
@@ -68,12 +69,12 @@
                 <div class="col-md-6 mb-3">
                     <label for="diagnosis" class="form-label">Diagnosis *</label>
                     <textarea class="form-control" id="diagnosis" name="diagnosis" rows="3" required
-                              placeholder="Enter the primary diagnosis...">{{ appointment.prescription.diagnosis if appointment.prescription else '' }}</textarea>
+                        placeholder="Enter the primary diagnosis...">{{ appointment.prescription.diagnosis if appointment.prescription else '' }}</textarea>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="symptoms" class="form-label">Symptoms</label>
                     <textarea class="form-control" id="symptoms" name="symptoms" rows="3"
-                              placeholder="Describe patient symptoms...">{{ appointment.prescription.symptoms if appointment.prescription else '' }}</textarea>
+                        placeholder="Describe patient symptoms...">{{ appointment.prescription.symptoms if appointment.prescription else '' }}</textarea>
                 </div>
             </div>
 
@@ -85,48 +86,49 @@
                         <i class="fas fa-plus"></i> Add Medicine
                     </button>
                 </div>
-                
+
                 <div id="medicinesContainer">
                     {% if appointment.prescription and appointment.prescription.medicines %}
-                        {% for medicine_item in appointment.prescription.get_medicines_list() %}
-                        <div class="medicine-item card mb-3">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label">Medicine *</label>
-                                        <input type="text" class="form-control medicine-name" 
-                                               value="{{ medicine_item.medicine.name }}" required>
-                                    </div>
-                                    <div class="col-md-2 mb-2">
-                                        <label class="form-label">Dosage *</label>
-                                        <input type="text" class="form-control" name="medicine_dosage[]" 
-                                               value="{{ medicine_item.dosage }}" required>
-                                    </div>
-                                    <div class="col-md-2 mb-2">
-                                        <label class="form-label">Frequency *</label>
-                                        <input type="text" class="form-control" name="medicine_frequency[]" 
-                                               value="{{ medicine_item.frequency }}" required>
-                                    </div>
-                                    <div class="col-md-2 mb-2">
-                                        <label class="form-label">Duration *</label>
-                                        <input type="text" class="form-control" name="medicine_duration[]" 
-                                               value="{{ medicine_item.duration }}" required>
-                                    </div>
-                                    <div class="col-md-2 mb-2">
-                                        <label class="form-label">Instructions</label>
-                                        <input type="text" class="form-control" name="medicine_instructions[]" 
-                                               value="{{ medicine_item.instructions or '' }}" placeholder="Optional">
-                                    </div>
-                                    <div class="col-md-1 mb-2">
-                                        <label class="form-label">&nbsp;</label><br>
-                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeMedicine(this)">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
+                    {% for medicine_item in appointment.prescription.get_medicines_list() %}
+                    <div class="medicine-item card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 mb-2">
+                                    <label class="form-label">Medicine *</label>
+                                    <input type="text" class="form-control medicine-name"
+                                        value="{{ medicine_item.medicine.name }}" required>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <label class="form-label">Dosage *</label>
+                                    <input type="text" class="form-control" name="medicine_dosage[]"
+                                        value="{{ medicine_item.dosage }}" required>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <label class="form-label">Frequency *</label>
+                                    <input type="text" class="form-control" name="medicine_frequency[]"
+                                        value="{{ medicine_item.frequency }}" required>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <label class="form-label">Duration *</label>
+                                    <input type="text" class="form-control" name="medicine_duration[]"
+                                        value="{{ medicine_item.duration }}" required>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <label class="form-label">Instructions</label>
+                                    <input type="text" class="form-control" name="medicine_instructions[]"
+                                        value="{{ medicine_item.instructions or '' }}" placeholder="Optional">
+                                </div>
+                                <div class="col-md-1 mb-2">
+                                    <label class="form-label">&nbsp;</label><br>
+                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                        onclick="removeMedicine(this)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        {% endfor %}
+                    </div>
+                    {% endfor %}
                     {% else %}
                     <!-- Default empty medicine item -->
                     <div class="medicine-item card mb-3">
@@ -134,32 +136,33 @@
                             <div class="row">
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label">Medicine *</label>
-                                    <input type="text" class="form-control medicine-name" 
-                                           placeholder="e.g., Paracetamol" required>
+                                    <input type="text" class="form-control medicine-name"
+                                        placeholder="e.g., Paracetamol" required>
                                 </div>
                                 <div class="col-md-2 mb-2">
                                     <label class="form-label">Dosage *</label>
-                                    <input type="text" class="form-control" name="medicine_dosage[]" 
-                                           placeholder="e.g., 1 tablet" required>
+                                    <input type="text" class="form-control" name="medicine_dosage[]"
+                                        placeholder="e.g., 1 tablet" required>
                                 </div>
                                 <div class="col-md-2 mb-2">
                                     <label class="form-label">Frequency *</label>
-                                    <input type="text" class="form-control" name="medicine_frequency[]" 
-                                           placeholder="e.g., Twice daily" required>
+                                    <input type="text" class="form-control" name="medicine_frequency[]"
+                                        placeholder="e.g., Twice daily" required>
                                 </div>
                                 <div class="col-md-2 mb-2">
                                     <label class="form-label">Duration *</label>
-                                    <input type="text" class="form-control" name="medicine_duration[]" 
-                                           placeholder="e.g., 7 days" required>
+                                    <input type="text" class="form-control" name="medicine_duration[]"
+                                        placeholder="e.g., 7 days" required>
                                 </div>
                                 <div class="col-md-2 mb-2">
                                     <label class="form-label">Instructions</label>
-                                    <input type="text" class="form-control" name="medicine_instructions[]" 
-                                           placeholder="Optional">
+                                    <input type="text" class="form-control" name="medicine_instructions[]"
+                                        placeholder="Optional">
                                 </div>
                                 <div class="col-md-1 mb-2">
                                     <label class="form-label">&nbsp;</label><br>
-                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeMedicine(this)">
+                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                        onclick="removeMedicine(this)">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
@@ -178,23 +181,24 @@
                 <div class="col-md-6 mb-3">
                     <label for="notes" class="form-label">Doctor's Notes</label>
                     <textarea class="form-control" id="notes" name="notes" rows="3"
-                              placeholder="Additional notes for the patient...">{{ appointment.prescription.notes if appointment.prescription else '' }}</textarea>
+                        placeholder="Additional notes for the patient...">{{ appointment.prescription.notes if appointment.prescription else '' }}</textarea>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="follow_up_instructions" class="form-label">Follow-up Instructions</label>
                     <textarea class="form-control" id="follow_up_instructions" name="follow_up_instructions" rows="3"
-                              placeholder="Instructions for follow-up care...">{{ appointment.prescription.follow_up_instructions if appointment.prescription else '' }}</textarea>
+                        placeholder="Instructions for follow-up care...">{{ appointment.prescription.follow_up_instructions if appointment.prescription else '' }}</textarea>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="follow_up_date" class="form-label">Follow-up Date</label>
                     <input type="date" class="form-control" id="follow_up_date" name="follow_up_date"
-                           value="{{ appointment.prescription.follow_up_date.strftime('%Y-%m-%d') if appointment.prescription and appointment.prescription.follow_up_date else '' }}">
+                        value="{{ appointment.prescription.follow_up_date.strftime('%Y-%m-%d') if appointment.prescription and appointment.prescription.follow_up_date else '' }}">
                 </div>
             </div>
 
             <!-- Form Actions -->
             <div class="d-flex justify-content-between">
-                <a href="{{ url_for('doctor.appointment_detail', appointment_id=appointment.id) }}" class="btn btn-secondary">
+                <a href="{{ url_for('doctor.appointment_detail', appointment_id=appointment.id) }}"
+                    class="btn btn-secondary">
                     <i class="fas fa-times"></i> Cancel
                 </a>
                 <button type="submit" class="btn btn-success">
@@ -243,14 +247,14 @@
 
 {% block scripts %}
 <script>
-let medicineCounter = 0;
+    let medicineCounter = 0;
 
-function addMedicine() {
-    const container = document.getElementById('medicinesContainer');
-    const medicineItem = document.createElement('div');
-    medicineItem.className = 'medicine-item card mb-3';
-    
-    medicineItem.innerHTML = `
+    function addMedicine() {
+        const container = document.getElementById('medicinesContainer');
+        const medicineItem = document.createElement('div');
+        medicineItem.className = 'medicine-item card mb-3';
+
+        medicineItem.innerHTML = `
         <div class="card-body">
             <div class="row">
                 <div class="col-md-3 mb-2">
@@ -287,69 +291,69 @@ function addMedicine() {
             </div>
         </div>
     `;
-    
-    container.appendChild(medicineItem);
-    medicineCounter++;
-}
 
-function removeMedicine(button) {
-    const medicineItem = button.closest('.medicine-item');
-    const container = document.getElementById('medicinesContainer');
-    
-    // Don't allow removal if it's the last medicine
-    if (container.children.length > 1) {
-        medicineItem.remove();
-    } else {
-        showAlert('At least one medicine is required', 'warning');
+        container.appendChild(medicineItem);
+        medicineCounter++;
     }
-}
 
-// Form validation
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
-    
-    form.addEventListener('submit', function(e) {
-        const diagnosis = document.getElementById('diagnosis').value.trim();
-        const medicineNames = document.querySelectorAll('.medicine-name');
-        const dosages = document.querySelectorAll('input[name="medicine_dosage[]"]');
-        const frequencies = document.querySelectorAll('input[name="medicine_frequency[]"]');
-        const durations = document.querySelectorAll('input[name="medicine_duration[]"]');
-        
-        // Validate diagnosis
-        if (!diagnosis) {
-            e.preventDefault();
-            showAlert('Diagnosis is required', 'danger');
-            return false;
+    function removeMedicine(button) {
+        const medicineItem = button.closest('.medicine-item');
+        const container = document.getElementById('medicinesContainer');
+
+        // Don't allow removal if it's the last medicine
+        if (container.children.length > 1) {
+            medicineItem.remove();
+        } else {
+            showAlert('At least one medicine is required', 'warning');
         }
-        
-        // Validate at least one medicine
-        let hasValidMedicine = false;
-        for (let i = 0; i < medicineNames.length; i++) {
-            if (medicineNames[i].value.trim() && dosages[i].value.trim() && 
-                frequencies[i].value.trim() && durations[i].value.trim()) {
-                hasValidMedicine = true;
-                break;
+    }
+
+    // Form validation
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form');
+
+        form.addEventListener('submit', function (e) {
+            const diagnosis = document.getElementById('diagnosis').value.trim();
+            const medicineNames = document.querySelectorAll('.medicine-name');
+            const dosages = document.querySelectorAll('input[name="medicine_dosage[]"]');
+            const frequencies = document.querySelectorAll('input[name="medicine_frequency[]"]');
+            const durations = document.querySelectorAll('input[name="medicine_duration[]"]');
+
+            // Validate diagnosis
+            if (!diagnosis) {
+                e.preventDefault();
+                showAlert('Diagnosis is required', 'danger');
+                return false;
             }
+
+            // Validate at least one medicine
+            let hasValidMedicine = false;
+            for (let i = 0; i < medicineNames.length; i++) {
+                if (medicineNames[i].value.trim() && dosages[i].value.trim() &&
+                    frequencies[i].value.trim() && durations[i].value.trim()) {
+                    hasValidMedicine = true;
+                    break;
+                }
+            }
+
+            if (!hasValidMedicine) {
+                e.preventDefault();
+                showAlert('At least one complete medicine entry is required', 'danger');
+                return false;
+            }
+
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            showLoading(submitBtn);
+        });
+
+        // Set minimum follow-up date to tomorrow
+        const followUpDate = document.getElementById('follow_up_date');
+        if (followUpDate) {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            followUpDate.min = tomorrow.toISOString().split('T')[0];
         }
-        
-        if (!hasValidMedicine) {
-            e.preventDefault();
-            showAlert('At least one complete medicine entry is required', 'danger');
-            return false;
-        }
-        
-        // Show loading state
-        const submitBtn = form.querySelector('button[type="submit"]');
-        showLoading(submitBtn);
     });
-    
-    // Set minimum follow-up date to tomorrow
-    const followUpDate = document.getElementById('follow_up_date');
-    if (followUpDate) {
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        followUpDate.min = tomorrow.toISOString().split('T')[0];
-    }
-});
 </script>
 {% endblock %}

@@ -58,7 +58,8 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="experience_years" class="form-label">Years of Experience</label>
-                            <input type="number" class="form-control" id="experience_years" name="experience_years" min="0" max="50">
+                            <input type="number" class="form-control" id="experience_years" name="experience_years"
+                                min="0" max="50">
                         </div>
                     </div>
 
@@ -86,8 +87,8 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="consultation_fee" class="form-label">Consultation Fee ($) *</label>
-                            <input type="number" class="form-control" id="consultation_fee" name="consultation_fee" 
-                                   step="0.01" min="0" required>
+                            <input type="number" class="form-control" id="consultation_fee" name="consultation_fee"
+                                step="0.01" min="0" required>
                         </div>
                     </div>
 
@@ -99,7 +100,7 @@
                         <div class="col-12 mb-3">
                             <label for="qualifications" class="form-label">Qualifications</label>
                             <textarea class="form-control" id="qualifications" name="qualifications" rows="3"
-                                      placeholder="e.g., MBBS, MD in Cardiology, Fellow of American College of Cardiology"></textarea>
+                                placeholder="e.g., MBBS, MD in Cardiology, Fellow of American College of Cardiology"></textarea>
                         </div>
                     </div>
 
@@ -113,7 +114,8 @@
                             <li><strong>Online Mode:</strong> Doctor will conduct video consultations</li>
                             <li><strong>Offline Mode:</strong> Doctor will see patients at the clinic/hospital</li>
                             <li><strong>Strict Separation:</strong> A doctor cannot be both online and offline</li>
-                            <li><strong>Mode Change:</strong> Consultation mode cannot be changed after registration</li>
+                            <li><strong>Mode Change:</strong> Consultation mode cannot be changed after registration
+                            </li>
                         </ul>
                     </div>
 
@@ -160,47 +162,47 @@
 
 {% block scripts %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Form validation
-    const form = document.querySelector('form');
-    const consultationMode = document.getElementById('consultation_mode');
-    const consultationFee = document.getElementById('consultation_fee');
-    
-    // Set minimum consultation fee based on mode
-    consultationMode.addEventListener('change', function() {
-        if (this.value === 'online') {
-            consultationFee.min = '50';
-            consultationFee.placeholder = 'Minimum $50 for online consultations';
-        } else if (this.value === 'offline') {
-            consultationFee.min = '30';
-            consultationFee.placeholder = 'Minimum $30 for offline consultations';
-        }
+    document.addEventListener('DOMContentLoaded', function () {
+        // Form validation
+        const form = document.querySelector('form');
+        const consultationMode = document.getElementById('consultation_mode');
+        const consultationFee = document.getElementById('consultation_fee');
+
+        // Set minimum consultation fee based on mode
+        consultationMode.addEventListener('change', function () {
+            if (this.value === 'online') {
+                consultationFee.min = '50';
+                consultationFee.placeholder = 'Minimum $50 for online consultations';
+            } else if (this.value === 'offline') {
+                consultationFee.min = '30';
+                consultationFee.placeholder = 'Minimum $30 for offline consultations';
+            }
+        });
+
+        // Form submission validation
+        form.addEventListener('submit', function (e) {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const firstName = document.getElementById('first_name').value;
+            const lastName = document.getElementById('last_name').value;
+
+            // Basic validation
+            if (password.length < 6) {
+                e.preventDefault();
+                showAlert('Password must be at least 6 characters long', 'danger');
+                return false;
+            }
+
+            if (!firstName.trim() || !lastName.trim()) {
+                e.preventDefault();
+                showAlert('Please enter both first and last names', 'danger');
+                return false;
+            }
+
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            showLoading(submitBtn);
+        });
     });
-    
-    // Form submission validation
-    form.addEventListener('submit', function(e) {
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        const firstName = document.getElementById('first_name').value;
-        const lastName = document.getElementById('last_name').value;
-        
-        // Basic validation
-        if (password.length < 6) {
-            e.preventDefault();
-            showAlert('Password must be at least 6 characters long', 'danger');
-            return false;
-        }
-        
-        if (!firstName.trim() || !lastName.trim()) {
-            e.preventDefault();
-            showAlert('Please enter both first and last names', 'danger');
-            return false;
-        }
-        
-        // Show loading state
-        const submitBtn = form.querySelector('button[type="submit"]');
-        showLoading(submitBtn);
-    });
-});
 </script>
 {% endblock %}

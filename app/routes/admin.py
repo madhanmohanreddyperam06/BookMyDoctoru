@@ -136,7 +136,9 @@ def add_doctor():
 def specialities():
     """Manage specialities"""
     specialities = Speciality.query.order_by(Speciality.name).all()
-    return render_template('admin/specialities.html', specialities=specialities)
+    total_doctors = sum(speciality.get_active_doctors_count() for speciality in specialities)
+    avg_doctors_per_speciality = total_doctors / len(specialities) if specialities else 0
+    return render_template('admin/specialities.html', specialities=specialities, total_doctors=total_doctors, avg_doctors_per_speciality=avg_doctors_per_speciality)
 
 @admin.route('/specialities/add', methods=['GET', 'POST'])
 @login_required

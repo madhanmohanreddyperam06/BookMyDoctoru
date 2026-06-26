@@ -21,20 +21,20 @@
     </div>
     <div class="card-body">
         <div class="btn-group" role="group">
-            <a href="{{ url_for('patient.appointments') }}" 
-               class="btn {{ 'btn-primary' if not status_filter else 'btn-outline-primary' }}">
+            <a href="{{ url_for('patient.appointments') }}"
+                class="btn {{ 'btn-primary' if not status_filter else 'btn-outline-primary' }}">
                 All
             </a>
-            <a href="{{ url_for('patient.appointments', status='confirmed') }}" 
-               class="btn {{ 'btn-primary' if status_filter == 'confirmed' else 'btn-outline-primary' }}">
+            <a href="{{ url_for('patient.appointments', status='confirmed') }}"
+                class="btn {{ 'btn-primary' if status_filter == 'confirmed' else 'btn-outline-primary' }}">
                 Confirmed
             </a>
-            <a href="{{ url_for('patient.appointments', status='completed') }}" 
-               class="btn {{ 'btn-primary' if status_filter == 'completed' else 'btn-outline-primary' }}">
+            <a href="{{ url_for('patient.appointments', status='completed') }}"
+                class="btn {{ 'btn-primary' if status_filter == 'completed' else 'btn-outline-primary' }}">
                 Completed
             </a>
-            <a href="{{ url_for('patient.appointments', status='cancelled') }}" 
-               class="btn {{ 'btn-primary' if status_filter == 'cancelled' else 'btn-outline-primary' }}">
+            <a href="{{ url_for('patient.appointments', status='cancelled') }}"
+                class="btn {{ 'btn-primary' if status_filter == 'cancelled' else 'btn-outline-primary' }}">
                 Cancelled
             </a>
         </div>
@@ -48,119 +48,125 @@
     </div>
     <div class="card-body">
         {% if appointments.items %}
-            <div class="table-responsive">
-                <table class="table table-bordered" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>Doctor</th>
-                            <th>Date & Time</th>
-                            <th>Mode</th>
-                            <th>Status</th>
-                            <th>Fee</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for appointment in appointments.items %}
-                        <tr>
-                            <td>
-                                <div class="fw-bold">{{ appointment.doctor.full_name }}</div>
-                                <div class="text-muted small">{{ appointment.doctor.speciality.name }}</div>
-                            </td>
-                            <td>
-                                <div>{{ appointment.date.strftime('%b %d, %Y') }}</div>
-                                <div class="text-muted small">{{ appointment.time_display }}</div>
-                                <div class="text-muted small">{{ appointment.token_display }}</div>
-                            </td>
-                            <td>
-                                <span class="badge bg-{{ 'primary' if appointment.consultation_mode == 'online' else 'secondary' }}">
-                                    {{ appointment.consultation_mode.title() }}
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge bg-{{ 'success' if appointment.status == 'completed' else 'warning' if appointment.status == 'confirmed' else 'danger' }}">
-                                    {{ appointment.status_display }}
-                                </span>
-                            </td>
-                            <td>${{ "%.2f"|format(appointment.consultation_fee) }}</td>
-                            <td>
-                                <div class="btn-group btn-group-sm">
-                                    <a href="{{ url_for('patient.appointment_detail', appointment_id=appointment.id) }}" 
-                                       class="btn btn-outline-info" title="View Details">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    {% if appointment.consultation_mode == 'online' and appointment.video_link and appointment.status == 'confirmed' %}
-                                    <a href="{{ appointment.video_link }}" target="_blank" 
-                                       class="btn btn-outline-primary" title="Join Video">
-                                        <i class="fas fa-video"></i>
-                                    </a>
-                                    {% endif %}
-                                    {% if appointment.can_be_cancelled() %}
-                                    <a href="{{ url_for('patient.cancel_appointment', appointment_id=appointment.id) }}" 
-                                       class="btn btn-outline-danger" title="Cancel"
-                                       onclick="return confirm('Are you sure you want to cancel this appointment?');">
-                                        <i class="fas fa-times"></i>
-                                    </a>
-                                    {% endif %}
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Pagination -->
-            {% if appointments.pages > 1 %}
-            <nav aria-label="Appointments pagination">
-                <ul class="pagination justify-content-center">
-                    {% if appointments.has_prev %}
-                    <li class="page-item">
-                        <a class="page-link" href="{{ url_for('patient.appointments', page=appointments.prev_num, status=status_filter) }}">Previous</a>
-                    </li>
-                    {% endif %}
-                    
-                    {% for page_num in appointments.iter_pages() %}
-                        {% if page_num %}
-                            {% if page_num != appointments.page %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('patient.appointments', page=page_num, status=status_filter) }}">{{ page_num }}</a>
-                            </li>
-                            {% else %}
-                            <li class="page-item active">
-                                <span class="page-link">{{ page_num }}</span>
-                            </li>
-                            {% endif %}
-                        {% else %}
-                        <li class="page-item disabled">
-                            <span class="page-link">...</span>
-                        </li>
-                        {% endif %}
+        <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Doctor</th>
+                        <th>Date & Time</th>
+                        <th>Mode</th>
+                        <th>Status</th>
+                        <th>Fee</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments.items %}
+                    <tr>
+                        <td>
+                            <div class="fw-bold">{{ appointment.doctor.full_name }}</div>
+                            <div class="text-muted small">{{ appointment.doctor.speciality.name }}</div>
+                        </td>
+                        <td>
+                            <div>{{ appointment.date.strftime('%b %d, %Y') }}</div>
+                            <div class="text-muted small">{{ appointment.time_display }}</div>
+                            <div class="text-muted small">{{ appointment.token_display }}</div>
+                        </td>
+                        <td>
+                            <span
+                                class="badge bg-{{ 'primary' if appointment.consultation_mode == 'online' else 'secondary' }}">
+                                {{ appointment.consultation_mode.title() }}
+                            </span>
+                        </td>
+                        <td>
+                            <span
+                                class="badge bg-{{ 'success' if appointment.status == 'completed' else 'warning' if appointment.status == 'confirmed' else 'danger' }}">
+                                {{ appointment.status_display }}
+                            </span>
+                        </td>
+                        <td>${{ "%.2f"|format(appointment.consultation_fee) }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ url_for('patient.appointment_detail', appointment_id=appointment.id) }}"
+                                    class="btn btn-outline-info" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                {% if appointment.consultation_mode == 'online' and appointment.video_link and
+                                appointment.status == 'confirmed' %}
+                                <a href="{{ appointment.video_link }}" target="_blank" class="btn btn-outline-primary"
+                                    title="Join Video">
+                                    <i class="fas fa-video"></i>
+                                </a>
+                                {% endif %}
+                                {% if appointment.can_be_cancelled() %}
+                                <a href="{{ url_for('patient.cancel_appointment', appointment_id=appointment.id) }}"
+                                    class="btn btn-outline-danger" title="Cancel"
+                                    onclick="return confirm('Are you sure you want to cancel this appointment?');">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
                     {% endfor %}
-                    
-                    {% if appointments.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="{{ url_for('patient.appointments', page=appointments.next_num, status=status_filter) }}">Next</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
-            {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if appointments.pages > 1 %}
+        <nav aria-label="Appointments pagination">
+            <ul class="pagination justify-content-center">
+                {% if appointments.has_prev %}
+                <li class="page-item">
+                    <a class="page-link"
+                        href="{{ url_for('patient.appointments', page=appointments.prev_num, status=status_filter) }}">Previous</a>
+                </li>
+                {% endif %}
+
+                {% for page_num in appointments.iter_pages() %}
+                {% if page_num %}
+                {% if page_num != appointments.page %}
+                <li class="page-item">
+                    <a class="page-link"
+                        href="{{ url_for('patient.appointments', page=page_num, status=status_filter) }}">{{ page_num }}</a>
+                </li>
+                {% else %}
+                <li class="page-item active">
+                    <span class="page-link">{{ page_num }}</span>
+                </li>
+                {% endif %}
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                {% if appointments.has_next %}
+                <li class="page-item">
+                    <a class="page-link"
+                        href="{{ url_for('patient.appointments', page=appointments.next_num, status=status_filter) }}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
         {% else %}
-            <div class="text-center py-5">
-                <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                <h5 class="text-muted">No appointments found</h5>
-                <p class="text-muted">
-                    {% if status_filter %}
-                    No appointments with status "{{ status_filter }}" found.
-                    {% else %}
-                    You haven't booked any appointments yet.
-                    {% endif %}
-                </p>
-                <a href="{{ url_for('patient.doctors') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Book Your First Appointment
-                </a>
-            </div>
+        <div class="text-center py-5">
+            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No appointments found</h5>
+            <p class="text-muted">
+                {% if status_filter %}
+                No appointments with status "{{ status_filter }}" found.
+                {% else %}
+                You haven't booked any appointments yet.
+                {% endif %}
+            </p>
+            <a href="{{ url_for('patient.doctors') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Book Your First Appointment
+            </a>
+        </div>
         {% endif %}
     </div>
 </div>
@@ -182,7 +188,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-3 mb-4">
         <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
@@ -200,7 +206,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-3 mb-4">
         <div class="card border-left-warning shadow h-100 py-2">
             <div class="card-body">
@@ -218,7 +224,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-3 mb-4">
         <div class="card border-left-info shadow h-100 py-2">
             <div class="card-body">
@@ -226,7 +232,8 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Spent</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            ${{ "%.2f"|format(appointments.items|selectattr('payment_status', 'equalto', 'paid')|sum(attribute='consultation_fee')|float) }}
+                            ${{ "%.2f"|format(appointments.items|selectattr('payment_status', 'equalto',
+                            'paid')|sum(attribute='consultation_fee')|float) }}
                         </div>
                     </div>
                     <div class="col-auto">

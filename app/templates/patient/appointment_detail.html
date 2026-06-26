@@ -20,10 +20,12 @@
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ appointment.token_display }}</h5>
             <div>
-                <span class="badge bg-{{ 'primary' if appointment.consultation_mode == 'online' else 'secondary' }} me-2">
+                <span
+                    class="badge bg-{{ 'primary' if appointment.consultation_mode == 'online' else 'secondary' }} me-2">
                     {{ appointment.consultation_mode.title() }}
                 </span>
-                <span class="badge bg-{{ 'success' if appointment.status == 'completed' else 'warning' if appointment.status == 'confirmed' else 'danger' }}">
+                <span
+                    class="badge bg-{{ 'success' if appointment.status == 'completed' else 'warning' if appointment.status == 'confirmed' else 'danger' }}">
                     {{ appointment.status_display }}
                 </span>
             </div>
@@ -36,7 +38,8 @@
                 <div class="mb-3">
                     <h5>{{ appointment.doctor.full_name }}</h5>
                     <p class="mb-1"><strong>Speciality:</strong> {{ appointment.doctor.speciality.name }}</p>
-                    <p class="mb-1"><strong>Experience:</strong> {{ appointment.doctor.experience_years or '-' }} years</p>
+                    <p class="mb-1"><strong>Experience:</strong> {{ appointment.doctor.experience_years or '-' }} years
+                    </p>
                     {% if appointment.doctor.qualifications %}
                     <p class="mb-1"><strong>Qualifications:</strong> {{ appointment.doctor.qualifications }}</p>
                     {% endif %}
@@ -47,8 +50,9 @@
                 <div class="mb-3">
                     <p class="mb-1"><strong>Date:</strong> {{ appointment.date.strftime('%A, %B %d, %Y') }}</p>
                     <p class="mb-1"><strong>Time:</strong> {{ appointment.time_display }}</p>
-                    <p class="mb-1"><strong>Consultation Fee:</strong> ${{ "%.2f"|format(appointment.consultation_fee) }}</p>
-                    <p class="mb-1"><strong>Payment Status:</strong> 
+                    <p class="mb-1"><strong>Consultation Fee:</strong> ${{ "%.2f"|format(appointment.consultation_fee)
+                        }}</p>
+                    <p class="mb-1"><strong>Payment Status:</strong>
                         <span class="badge bg-{{ 'success' if appointment.payment_status == 'paid' else 'warning' }}">
                             {{ appointment.payment_status_display }}
                         </span>
@@ -56,7 +60,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Consultation Mode Specific Information -->
         <div class="row mt-3">
             <div class="col-12">
@@ -65,17 +69,19 @@
                     <h6 class="alert-heading"><i class="fas fa-laptop"></i> Online Consultation</h6>
                     {% if appointment.video_link %}
                     <p class="mb-2">
-                        <strong>Video Link:</strong> 
+                        <strong>Video Link:</strong>
                         <a href="{{ appointment.video_link }}" target="_blank" class="btn btn-sm btn-outline-primary">
                             <i class="fas fa-video"></i> Join Consultation
                         </a>
                     </p>
                     <p class="mb-0">
-                        <small class="text-muted">The video link will be available 30 minutes before your appointment time.</small>
+                        <small class="text-muted">The video link will be available 30 minutes before your appointment
+                            time.</small>
                     </p>
                     {% else %}
                     <p class="mb-0">
-                        <small class="text-muted">Video consultation link will be provided by the doctor before the appointment.</small>
+                        <small class="text-muted">Video consultation link will be provided by the doctor before the
+                            appointment.</small>
                     </p>
                     {% endif %}
                 </div>
@@ -101,11 +107,11 @@
     </div>
     <div class="card-body">
         <div class="alert alert-warning mb-3">
-            <i class="fas fa-exclamation-triangle"></i> 
+            <i class="fas fa-exclamation-triangle"></i>
             You can cancel this appointment up to 2 hours before the scheduled time.
         </div>
-        <form method="POST" action="{{ url_for('patient.cancel_appointment', appointment_id=appointment.id) }}" 
-              onsubmit="return confirm('Are you sure you want to cancel this appointment?');">
+        <form method="POST" action="{{ url_for('patient.cancel_appointment', appointment_id=appointment.id) }}"
+            onsubmit="return confirm('Are you sure you want to cancel this appointment?');">
             <button type="submit" class="btn btn-danger">
                 <i class="fas fa-times"></i> Cancel Appointment
             </button>
@@ -134,28 +140,28 @@
                 <p>{{ appointment.prescription.symptoms or 'Not recorded' }}</p>
             </div>
         </div>
-        
+
         <div class="mb-3">
             <h6 class="text-muted">Prescribed Medicines</h6>
             {% if appointment.prescription.get_medicines_list() %}
-                {% for medicine_item in appointment.prescription.get_medicines_list() %}
-                <div class="prescription-item mb-2">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <strong>{{ medicine_item.medicine.name }}</strong>
-                            {% if medicine_item.medicine.strength %}
-                            <span class="badge bg-primary ms-2">{{ medicine_item.medicine.strength }}</span>
-                            {% endif %}
-                            <div class="text-muted small">{{ medicine_item.full_instruction }}</div>
-                        </div>
+            {% for medicine_item in appointment.prescription.get_medicines_list() %}
+            <div class="prescription-item mb-2">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <strong>{{ medicine_item.medicine.name }}</strong>
+                        {% if medicine_item.medicine.strength %}
+                        <span class="badge bg-primary ms-2">{{ medicine_item.medicine.strength }}</span>
+                        {% endif %}
+                        <div class="text-muted small">{{ medicine_item.full_instruction }}</div>
                     </div>
                 </div>
-                {% endfor %}
+            </div>
+            {% endfor %}
             {% else %}
             <p class="text-muted">No medicines prescribed</p>
             {% endif %}
         </div>
-        
+
         {% if appointment.prescription.follow_up_instructions %}
         <div class="row mb-3">
             <div class="col-12">
@@ -169,7 +175,7 @@
             </div>
         </div>
         {% endif %}
-        
+
         {% if appointment.prescription.notes %}
         <div class="row">
             <div class="col-12">
@@ -180,10 +186,10 @@
             </div>
         </div>
         {% endif %}
-        
+
         <div class="text-end mt-3">
-            <a href="{{ url_for('patient.prescription_detail', prescription_id=appointment.prescription.id) }}" 
-               class="btn btn-outline-success btn-sm">
+            <a href="{{ url_for('patient.prescription_detail', prescription_id=appointment.prescription.id) }}"
+                class="btn btn-outline-success btn-sm">
                 <i class="fas fa-print"></i> Print Prescription
             </a>
         </div>

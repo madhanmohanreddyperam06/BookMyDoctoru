@@ -1,176 +1,350 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Doctor Appointment System{% endblock %}</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-    
-    {% block styles %}{% endblock %}
-</head>
-<body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url_for('main.index') }}">
-                <i class="fas fa-hospital"></i> 
-                {% if current_user.is_authenticated %}
-                    {% if current_user.is_admin() %}
-                        Admin Dashboard
-                    {% elif current_user.is_doctor() %}
-                        Doctor Dashboard
-                    {% elif current_user.is_patient() %}
-                        Patient Dashboard
-                    {% endif %}
-                {% else %}
-                    Doctor Appointment System
-                {% endif %}
-            </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                {% if current_user.is_authenticated %}
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Doctor Appointment System{% endblock %}</title>
+
+        <!-- Favicon -->
+        <link rel="icon" type="image/png"
+            href="{{ url_for('static', filename='images/icons8-doctor-male-skin-type-3-48.png') }}">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <!-- Custom CSS -->
+        <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+        {% block styles %}{% endblock %}
+    </head>
+
+    <body class="{% block body_class %}{% endblock %}">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary {% block navbar_class %}{% endblock %}">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{ url_for('main.index') }}">
+                    <i class="fas fa-hospital me-2"></i>
+                    <span>
+                        {% if current_user.is_authenticated %}
+                        BookMyDoctor
+                        {% else %}
+                        BookMyDoctor
+                        {% endif %}
+                    </span>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    {% if current_user.is_authenticated %}
                     <ul class="navbar-nav ms-auto">
                         {% if current_user.is_admin() %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('admin.dashboard') }}">
-                                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('admin.doctors') }}">
-                                    <i class="fas fa-user-md"></i> Doctors
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('admin.specialities') }}">
-                                    <i class="fas fa-stethoscope"></i> Specialities
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('admin.shifts') }}">
-                                    <i class="fas fa-calendar-alt"></i> Shifts
-                                </a>
-                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin.dashboard') }}">
+                                <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin.doctors') }}">
+                                <i class="fas fa-user-md me-2"></i> Doctors
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin.specialities') }}">
+                                <i class="fas fa-stethoscope me-2"></i> Specialities
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin.shifts') }}">
+                                <i class="fas fa-calendar-alt me-2"></i> Shifts
+                            </a>
+                        </li>
                         {% elif current_user.is_doctor() %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('doctor.dashboard') }}">
-                                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('doctor.schedule') }}">
-                                    <i class="fas fa-calendar"></i> Schedule
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('doctor.appointments') }}">
-                                    <i class="fas fa-calendar-check"></i> Appointments
-                                </a>
-                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('doctor.dashboard') }}">
+                                <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('doctor.schedule') }}">
+                                <i class="fas fa-calendar me-2"></i> Schedule
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('doctor.appointments') }}">
+                                <i class="fas fa-calendar-check me-2"></i> Appointments
+                            </a>
+                        </li>
                         {% elif current_user.is_patient() %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('patient.dashboard') }}">
-                                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('patient.doctors') }}">
-                                    <i class="fas fa-user-md"></i> Find Doctors
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('patient.appointments') }}">
-                                    <i class="fas fa-calendar-check"></i> My Appointments
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('patient.medical_history') }}">
-                                    <i class="fas fa-file-medical"></i> Medical History
-                                </a>
-                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('patient.dashboard') }}">
+                                <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('patient.doctors') }}">
+                                <i class="fas fa-user-md me-2"></i> Find Doctors
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('patient.appointments') }}">
+                                <i class="fas fa-calendar-check me-2"></i> My Appointments
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('patient.medical_history') }}">
+                                <i class="fas fa-file-medical me-2"></i> Medical History
+                            </a>
+                        </li>
                         {% endif %}
-                        
+
                         <!-- Profile Dropdown -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user"></i> {{ current_user.email.split('@')[0] }}
+                            <a class="nav-link dropdown-toggle profile-logo" href="#" id="navbarDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false" style="padding: 8px 12px;">
+                                <i class="fas fa-user-circle fa-lg"></i>
                             </a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="{{ url_for('auth.profile') }}">
-                                    <i class="fas fa-user-circle"></i> Profile
-                                </a></li>
-                                <li><hr class="dropdown-divider"></li>
+                                        <i class="fas fa-user-circle me-2"></i> Profile
+                                    </a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
                                 <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">
-                                    <i class="fas fa-sign-out-alt"></i> Logout
-                                </a></li>
+                                        <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                    </a></li>
                             </ul>
                         </li>
                     </ul>
-                {% else %}
+                    {% else %}
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('auth.login') }}">
-                                <i class="fas fa-sign-in-alt"></i> Login
+                                <i class="fas fa-sign-in-alt me-2"></i> Login
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('auth.register_patient') }}">
-                                <i class="fas fa-user-plus"></i> Register
+                                <i class="fas fa-user-plus me-2"></i> Register
                             </a>
                         </li>
                     </ul>
-                {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+
+        <!-- Flash Messages -->
+        <div class="container-fluid">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show"
+                role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper {% block content_wrapper_class %}{% endblock %}">
+            <!-- Main Content -->
+            <main
+                class="container-fluid {% block main_margin %}my-4{% endblock %} {% block main_class %}{% endblock %}">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+
+        <!-- Footer -->
+        {% if request.endpoint not in ['auth.login', 'auth.register_patient'] %}
+        <footer class="professional-footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- About Section -->
+                    <div class="col-md-4 mb-4">
+                        <h5 class="footer-title">About Us</h5>
+                        <p class="footer-text">
+                            Doctor Appointment System is a comprehensive healthcare platform that connects patients with
+                            qualified medical professionals.
+                            Our mission is to make healthcare accessible, efficient, and patient-centered.
+                        </p>
+                        <div class="social-links">
+                            <a href="https://www.facebook.com" class="social-link" target="_blank"><i
+                                    class="fab fa-facebook-f"></i></a>
+                            <a href="https://x.com/MadhanM16616334?t=Fat391ZrwB1ZF7M1rZ6REg&s=08" class="social-link"
+                                target="_blank"><i class="fab fa-twitter"></i></a>
+                            <a href="https://www.linkedin.com/in/madhan-mohan-reddy-peram-63181b253?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+                                class="social-link" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="https://www.instagram.com/madhan_me6?igsh=MWR0YngzNGhiaGhmcQ==" class="social-link"
+                                target="_blank"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Quick Links Section -->
+                    <div class="col-md-4">
+                        <h5>Quick Links</h5>
+                        <ul class="footer-links">
+                            <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                            <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                            <li><a href="{{ url_for('auth.register_patient') }}">Register</a></li>
+                            <li><a href="#" onclick="showPrivacyPolicy()">Privacy Policy</a></li>
+                            <li><a href="#" onclick="showTermsOfService()">Terms of Service</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Contact Section -->
+                    <div class="col-md-4">
+                        <h5>Contact Info</h5>
+                        <p class="mb-2">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            4/78 Asha Nagar, Kadapa, Andhra Pradesh 516001
+                        </p>
+                        <p class="mb-2">
+                            <i class="fas fa-phone me-2"></i>
+                            +91 9110395993
+                        </p>
+                        <p class="mb-0">
+                            <i class="fas fa-envelope me-2"></i>
+                            madhanmohanreddyperam06@gmail.com
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Copyright Section -->
+                <div class="footer-bottom">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="copyright">&copy; 2026 Doctor Appointment System. All rights reserved.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="author">Designed & Developed by <a href="#" class="author-link">Madhan Mohan Reddy
+                                    Peram</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        {% endif %}
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <!-- Custom JS -->
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/fixes.js') }}"></script>
+
+        <!-- Privacy Policy Modal -->
+        <div class="modal fade" id="privacyPolicyModal" tabindex="-1" aria-labelledby="privacyPolicyModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="privacyPolicyModalLabel">Privacy Policy</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h6>Information We Collect</h6>
+                        <p>We collect information you provide directly to us, such as when you create an account, book
+                            an appointment, or contact us for support.</p>
+
+                        <h6>How We Use Your Information</h6>
+                        <p>We use the information we collect to:</p>
+                        <ul>
+                            <li>Provide, maintain, and improve our services</li>
+                            <li>Process appointments and send related information</li>
+                            <li>Respond to your comments, questions, and requests</li>
+                            <li>Communicate with you about products, services, and events</li>
+                        </ul>
+
+                        <h6>Information Sharing</h6>
+                        <p>We do not sell, trade, or otherwise transfer your personal information to third parties
+                            without your consent, except as described in this policy.</p>
+
+                        <h6>Data Security</h6>
+                        <p>We implement appropriate technical and organizational measures to protect your personal
+                            information against unauthorized access, alteration, disclosure, or destruction.</p>
+
+                        <h6>Contact Us</h6>
+                        <p>If you have any questions about this Privacy Policy, please contact us at
+                            madhanmohanreddyperam06@gmail.com</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </nav>
 
-    <!-- Flash Messages -->
-    <div class="container-fluid">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <!-- Terms of Service Modal -->
+        <div class="modal fade" id="termsOfServiceModal" tabindex="-1" aria-labelledby="termsOfServiceModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="termsOfServiceModalLabel">Terms of Service</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-    </div>
+                    <div class="modal-body">
+                        <h6>Acceptance of Terms</h6>
+                        <p>By accessing and using the Doctor Appointment System, you accept and agree to be bound by the
+                            terms and provision of this agreement.</p>
 
-    <!-- Content Wrapper -->
-    <div class="content-wrapper">
-        <!-- Main Content -->
-        <main class="container-fluid my-4">
-            {% block content %}{% endblock %}
-        </main>
-    </div>
+                        <h6>Use License</h6>
+                        <p>Permission is granted to temporarily use the Doctor Appointment System for personal,
+                            non-commercial transitory viewing only. This is the grant of a license, not a transfer of
+                            title.</p>
 
-    <!-- Footer -->
-    <footer class="text-center py-3 mt-5">
-        <div class="container-fluid">
-            <p class="mb-0">&copy; 2026 Doctor Appointment System. All rights reserved.</p>
+                        <h6>Appointment Booking</h6>
+                        <p>Users must provide accurate information when booking appointments. The system reserves the
+                            right to cancel appointments if false information is provided.</p>
+
+                        <h6>User Responsibilities</h6>
+                        <p>Users are responsible for maintaining the confidentiality of their account credentials and
+                            for all activities that occur under their account.</p>
+
+                        <h6>Medical Information</h6>
+                        <p>This platform is for appointment scheduling purposes only. For medical emergencies, please
+                            contact emergency services immediately.</p>
+
+                        <h6>Limitation of Liability</h6>
+                        <p>In no event shall the Doctor Appointment System or its suppliers be liable for any damages
+                            (including, without limitation, damages for loss of data or profit, or due to business
+                            interruption) arising out of the use or inability to use the service.</p>
+
+                        <h6>Contact Information</h6>
+                        <p>For any questions regarding these Terms of Service, please contact us at
+                            madhanmohanreddyperam06@gmail.com</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
-    </footer>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Custom JS -->
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/fixes.js') }}"></script>
-    
-    {% block scripts %}{% endblock %}
-</body>
+        <script>
+            function showPrivacyPolicy() {
+                var modal = new bootstrap.Modal(document.getElementById('privacyPolicyModal'));
+                modal.show();
+            }
+
+            function showTermsOfService() {
+                var modal = new bootstrap.Modal(document.getElementById('termsOfServiceModal'));
+                modal.show();
+            }
+        </script>
+
+        {% block scripts %}{% endblock %}
+    </body>
+
 </html>

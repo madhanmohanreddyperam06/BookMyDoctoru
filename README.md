@@ -41,19 +41,19 @@ A comprehensive hospital appointment management system supporting Admin, Doctor,
 ### Backend
 
 - **Python 3.8+** - Programming language
-- **Flask 2.3** - Web framework
-- **Flask-SQLAlchemy 3.0** (requirements: Flask-SQLAlchemy==3.0.5) - ORM for database management
-- **SQLAlchemy 1.4** - SQL toolkit and ORM
-- **Flask-Login 0.6** - User session & authentication management
-- **Flask-Migrate 4.0** - Database schema migrations (Alembic)
-- **Flask-WTF 1.1** - Form handling & CSRF protection
-- **Flask-Bcrypt 1.0** - Password hashing
-- **Flask-SocketIO 5.3** - Real-time WebSocket support
-- **PyMySQL 1.1** - MySQL database driver
-- **python-dotenv 1.0** - Environment variable management
-- **email-validator 2.0** - Email validation
-- **Werkzeug 2.3** - WSGI utility library
-- **cryptography 41+** - Cryptographic operations
+- **Flask 2.3.3** - Web framework
+- **Flask-SQLAlchemy 3.0.5** - ORM for database management
+- **SQLAlchemy 1.4.23** - SQL toolkit and ORM
+- **Flask-Login 0.6.3** - User session & authentication management
+- **Flask-Migrate 4.0.5** - Database schema migrations (Alembic)
+- **Flask-WTF 1.1.1** - Form handling & CSRF protection
+- **Flask-Bcrypt 1.0.1** - Password hashing
+- **Flask-SocketIO 5.3.6** - Real-time WebSocket support
+- **PyMySQL 1.1.0** - MySQL database driver
+- **python-dotenv 1.0.0** - Environment variable management
+- **email-validator 2.0.0** - Email validation
+- **Werkzeug 2.3.7** - WSGI utility library
+- **cryptography 41.0.0+** - Cryptographic operations
 
 ### Database
 
@@ -90,7 +90,7 @@ A comprehensive hospital appointment management system supporting Admin, Doctor,
 1. **Clone and setup**
 
    ```bash
-   git clone https://github.com/madhanmohanreddyperam06/Doctor-Appointment-System.git
+   git clone https://github.com/madhanmohanreddyperam06/BookMyDoctor.git
    cd Doctor-Appointment-System
    python -m venv venv
 
@@ -135,13 +135,13 @@ A comprehensive hospital appointment management system supporting Admin, Doctor,
 5. **Start the application**
 
    ```bash
-   python start.py
+   python run.py
    ```
 
 6. **Access the application**
    - Open browser: `http://localhost:5000`
-   - Admin: admin@hospital.com / admin123
-   - Patient: patient1@email.com / patient123
+   - Admin: <admin@hospital.com> / admin123
+   - Patient: <patient1@email.com> / patient123
 
 ### Database Setup
 
@@ -194,12 +194,8 @@ Doctor-Appointment-System/
 ├── 📄 requirements.txt            # Python dependencies
 ├── 📄 config.py                   # App configuration (Dev/Test/Prod)
 ├── 📄 run.py                      # Main application entry point
-├── 📄 start.py                    # Enhanced startup script with DB check
-├── 📄 check_database.py           # Database status checker
 ├── 📄 init_mysql.py               # MySQL database creator
 ├── 📄 init_mysql_data.py          # Database seeder with sample data
-├── 📄 test_mysql.py               # MySQL connection tester
-├── 📄 view_database.py            # Database content viewer
 ├── 📁 app/                        # Main application package
 │   ├── 📄 __init__.py             # App factory & extension init
 │   ├── 📁 models/                 # SQLAlchemy database models
@@ -419,7 +415,8 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 For support and questions, please open an issue in the repository or contact:
 
-**Madhan Mohan Reddy Peram**
+### Madhan Mohan Reddy Peram
+
 - 📧 Email: [madhanmohanreddyperam06@gmail.com](mailto:madhanmohanreddyperam06@gmail.com)
 - 📱 Mobile: +91 9110395993
 - 🔗 LinkedIn: [Madhan Mohan Reddy Peram](https://www.linkedin.com/in/madhan-mohan-reddy-peram-63181b253)

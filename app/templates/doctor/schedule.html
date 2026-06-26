@@ -18,14 +18,15 @@
 <div class="card shadow mb-4">
     <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary">Week of {{ start_date.strftime('%B %d, %Y') }} - {{ end_date.strftime('%B %d, %Y') }}</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Week of {{ start_date.strftime('%B %d, %Y') }} -
+                {{ end_date.strftime('%B %d, %Y') }}</h6>
             <div class="btn-group btn-group-sm">
-                <a href="{{ url_for('doctor.schedule', start_date=(start_date - timedelta(days=7)).strftime('%Y-%m-%d')) }}" 
-                   class="btn btn-outline-primary">
+                <a href="{{ url_for('doctor.schedule', start_date=(start_date - timedelta(days=7)).strftime('%Y-%m-%d')) }}"
+                    class="btn btn-outline-primary">
                     <i class="fas fa-chevron-left"></i> Previous Week
                 </a>
-                <a href="{{ url_for('doctor.schedule', start_date=(start_date + timedelta(days=7)).strftime('%Y-%m-%d')) }}" 
-                   class="btn btn-outline-primary">
+                <a href="{{ url_for('doctor.schedule', start_date=(start_date + timedelta(days=7)).strftime('%Y-%m-%d')) }}"
+                    class="btn btn-outline-primary">
                     Next Week <i class="fas fa-chevron-right"></i>
                 </a>
             </div>
@@ -43,7 +44,8 @@
                             <div class="text-muted small">{{ shift.date.strftime('%b %d') }}</div>
                         </div>
                         <div>
-                            <span class="badge bg-{{ 'primary' if shift.consultation_mode == 'online' else 'secondary' }}">
+                            <span
+                                class="badge bg-{{ 'primary' if shift.consultation_mode == 'online' else 'secondary' }}">
                                 {{ shift.consultation_mode.title() }}
                             </span>
                         </div>
@@ -60,9 +62,9 @@
                         <div class="mb-2">
                             <div class="text-muted small">Bookings</div>
                             <div class="progress" style="height: 15px;">
-                                <div class="progress-bar bg-{{ 'warning' if shift.get_booked_count() >= shift.max_patients * 0.8 else 'success' }}" 
-                                     role="progressbar" 
-                                     data-width="{{ (shift.get_booked_count() / shift.max_patients * 100) if shift.max_patients > 0 else 0 }}">
+                                <div class="progress-bar bg-{{ 'warning' if shift.get_booked_count() >= shift.max_patients * 0.8 else 'success' }}"
+                                    role="progressbar"
+                                    data-width="{{ (shift.get_booked_count() / shift.max_patients * 100) if shift.max_patients > 0 else 0 }}">
                                     {{ shift.get_booked_count() }}/{{ shift.max_patients }}
                                 </div>
                             </div>
@@ -73,9 +75,8 @@
                     </div>
                     <div class="card-footer bg-transparent">
                         <div class="d-grid">
-                            <button class="btn btn-sm btn-outline-primary" 
-                                    data-action="viewShiftDetails" 
-                                    data-shift-id="{{ shift.id }}">
+                            <button class="btn btn-sm btn-outline-primary" data-action="viewShiftDetails"
+                                data-shift-id="{{ shift.id }}">
                                 <i class="fas fa-eye"></i> View Details
                             </button>
                         </div>
@@ -112,7 +113,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-3 mb-4">
         <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
@@ -122,7 +123,7 @@
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                             {% set total = 0 %}
                             {% for shift in shifts %}
-                                {% set total = total + shift.get_booked_count() %}
+                            {% set total = total + shift.get_booked_count() %}
                             {% endfor %}
                             {{ total }}
                         </div>
@@ -134,14 +135,15 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-3 mb-4">
         <div class="card border-left-info shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Online Shifts</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ shifts|selectattr('consultation_mode', 'equalto', 'online')|list|length }}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{ shifts|selectattr('consultation_mode', 'equalto', 'online')|list|length }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-laptop fa-2x text-gray-300"></i>
@@ -150,14 +152,15 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-3 mb-4">
         <div class="card border-left-warning shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Offline Shifts</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ shifts|selectattr('consultation_mode', 'equalto', 'offline')|list|length }}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{ shifts|selectattr('consultation_mode', 'equalto', 'offline')|list|length }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-hospital fa-2x text-gray-300"></i>
@@ -189,37 +192,37 @@
 
 {% block scripts %}
 <script>
-// Handle progress bar widths
-document.addEventListener('DOMContentLoaded', function() {
-    const progressBars = document.querySelectorAll('[data-width]');
-    progressBars.forEach(bar => {
-        const width = bar.getAttribute('data-width');
-        bar.style.width = width + '%';
+    // Handle progress bar widths
+    document.addEventListener('DOMContentLoaded', function () {
+        const progressBars = document.querySelectorAll('[data-width]');
+        progressBars.forEach(bar => {
+            const width = bar.getAttribute('data-width');
+            bar.style.width = width + '%';
+        });
     });
-});
 
-// Handle shift details modal
-document.addEventListener('click', function(e) {
-    if (e.target.closest('[data-action="viewShiftDetails"]')) {
-        const button = e.target.closest('[data-action="viewShiftDetails"]');
-        const shiftId = button.getAttribute('data-shift-id');
-        viewShiftDetails(shiftId);
-    }
-});
+    // Handle shift details modal
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('[data-action="viewShiftDetails"]')) {
+            const button = e.target.closest('[data-action="viewShiftDetails"]');
+            const shiftId = button.getAttribute('data-shift-id');
+            viewShiftDetails(shiftId);
+        }
+    });
 
-function viewShiftDetails(shiftId) {
-    // Fetch shift details via AJAX (simpler approach)
-    fetch(`/doctor/shift/${shiftId}/details`)
-        .then(response => response.json())
-        .then(data => {
-            const content = document.getElementById('shiftDetailsContent');
-            
-            let appointmentsHtml = '';
-            if (data.appointments && data.appointments.length > 0) {
-                appointmentsHtml = '<h6 class="mb-3">Appointments</h6><div class="list-group">';
-                data.appointments.forEach(apt => {
-                    const statusClass = apt.status === 'completed' ? 'success' : apt.status === 'confirmed' ? 'warning' : 'danger';
-                    appointmentsHtml += `
+    function viewShiftDetails(shiftId) {
+        // Fetch shift details via AJAX (simpler approach)
+        fetch(`/doctor/shift/${shiftId}/details`)
+            .then(response => response.json())
+            .then(data => {
+                const content = document.getElementById('shiftDetailsContent');
+
+                let appointmentsHtml = '';
+                if (data.appointments && data.appointments.length > 0) {
+                    appointmentsHtml = '<h6 class="mb-3">Appointments</h6><div class="list-group">';
+                    data.appointments.forEach(apt => {
+                        const statusClass = apt.status === 'completed' ? 'success' : apt.status === 'confirmed' ? 'warning' : 'danger';
+                        appointmentsHtml += `
                         <div class="list-group-item">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
@@ -230,13 +233,13 @@ function viewShiftDetails(shiftId) {
                             </div>
                         </div>
                     `;
-                });
-                appointmentsHtml += '</div>';
-            } else {
-                appointmentsHtml = '<p class="text-muted">No appointments scheduled for this shift.</p>';
-            }
-            
-            content.innerHTML = `
+                    });
+                    appointmentsHtml += '</div>';
+                } else {
+                    appointmentsHtml = '<p class="text-muted">No appointments scheduled for this shift.</p>';
+                }
+
+                content.innerHTML = `
                 <div class="row">
                     <div class="col-md-6">
                         <h6 class="text-muted">Shift Information</h6>
@@ -281,18 +284,18 @@ function viewShiftDetails(shiftId) {
                 <hr>
                 ${appointmentsHtml}
             `;
-            
-            const modal = new bootstrap.Modal(document.getElementById('shiftDetailsModal'));
-            modal.show();
-        })
-        .catch(error => {
-            console.error('Error fetching shift details:', error);
-            // Fallback to basic display
-            const content = document.getElementById('shiftDetailsContent');
-            content.innerHTML = '<p class="text-muted">Unable to load shift details.</p>';
-            const modal = new bootstrap.Modal(document.getElementById('shiftDetailsModal'));
-            modal.show();
-        });
-}
+
+                const modal = new bootstrap.Modal(document.getElementById('shiftDetailsModal'));
+                modal.show();
+            })
+            .catch(error => {
+                console.error('Error fetching shift details:', error);
+                // Fallback to basic display
+                const content = document.getElementById('shiftDetailsContent');
+                content.innerHTML = '<p class="text-muted">Unable to load shift details.</p>';
+                const modal = new bootstrap.Modal(document.getElementById('shiftDetailsModal'));
+                modal.show();
+            });
+    }
 </script>
 {% endblock %}
