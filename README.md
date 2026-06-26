@@ -1,4 +1,6 @@
-# Doctor Appointment System
+# BookMyDoctor
+
+## Doctor Appointment Booking Platform
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![Flask](https://img.shields.io/badge/Flask-2.3+-green.svg)
