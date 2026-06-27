@@ -234,17 +234,22 @@
 
             <div class="profile-field">
                 <label for="blood_group">Blood Group</label>
-                <select id="blood_group" name="blood_group" onchange="updateBloodGroup(this.value)">
-                    <option value="">Select Blood Group</option>
-                    <option value="A+" {{ 'selected' if profile and profile.blood_group=='A+' else '' }}>A+</option>
-                    <option value="A-" {{ 'selected' if profile and profile.blood_group=='A-' else '' }}>A-</option>
-                    <option value="B+" {{ 'selected' if profile and profile.blood_group=='B+' else '' }}>B+</option>
-                    <option value="B-" {{ 'selected' if profile and profile.blood_group=='B-' else '' }}>B-</option>
-                    <option value="AB+" {{ 'selected' if profile and profile.blood_group=='AB+' else '' }}>AB+</option>
-                    <option value="AB-" {{ 'selected' if profile and profile.blood_group=='AB-' else '' }}>AB-</option>
-                    <option value="O+" {{ 'selected' if profile and profile.blood_group=='O+' else '' }}>O+</option>
-                    <option value="O-" {{ 'selected' if profile and profile.blood_group=='O-' else '' }}>O-</option>
-                </select>
+                <div class="d-flex gap-2">
+                    <select id="blood_group" name="blood_group">
+                        <option value="">Select Blood Group</option>
+                        <option value="A+" {{ 'selected' if profile and profile.blood_group=='A+' else '' }}>A+</option>
+                        <option value="A-" {{ 'selected' if profile and profile.blood_group=='A-' else '' }}>A-</option>
+                        <option value="B+" {{ 'selected' if profile and profile.blood_group=='B+' else '' }}>B+</option>
+                        <option value="B-" {{ 'selected' if profile and profile.blood_group=='B-' else '' }}>B-</option>
+                        <option value="AB+" {{ 'selected' if profile and profile.blood_group=='AB+' else '' }}>AB+
+                        </option>
+                        <option value="AB-" {{ 'selected' if profile and profile.blood_group=='AB-' else '' }}>AB-
+                        </option>
+                        <option value="O+" {{ 'selected' if profile and profile.blood_group=='O+' else '' }}>O+</option>
+                        <option value="O-" {{ 'selected' if profile and profile.blood_group=='O-' else '' }}>O-</option>
+                    </select>
+                    <button type="button" class="btn btn-primary" onclick="saveBloodGroup()">Save</button>
+                </div>
             </div>
             {% endif %}
 
@@ -302,8 +307,12 @@
 </div>
 
 <script>
-    function updateBloodGroup(bloodGroup) {
-        if (!bloodGroup) return;
+    function saveBloodGroup() {
+        const bloodGroup = document.getElementById('blood_group').value;
+        if (!bloodGroup) {
+            alert('Please select a blood group');
+            return;
+        }
 
         fetch('/auth/update-blood-group', {
             method: 'POST',
@@ -315,13 +324,14 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    console.log('Blood group updated successfully');
+                    alert('Blood group saved successfully!');
                 } else {
-                    console.error('Failed to update blood group:', data.message);
+                    alert('Failed to save blood group: ' + data.message);
                 }
             })
             .catch(error => {
                 console.error('Error updating blood group:', error);
+                alert('Error updating blood group. Please try again.');
             });
     }
 </script>
