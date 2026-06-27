@@ -52,6 +52,7 @@ def register_patient():
         phone = request.form.get('phone')
         date_of_birth = request.form.get('date_of_birth')
         gender = request.form.get('gender')
+        blood_group = request.form.get('blood_group')
         
         # Validation
         if password != confirm_password:
@@ -76,7 +77,8 @@ def register_patient():
                 last_name=last_name,
                 phone=phone,
                 date_of_birth=datetime.strptime(date_of_birth, '%Y-%m-%d').date(),
-                gender=gender
+                gender=gender,
+                blood_group=blood_group
             )
             db.session.add(patient)
             db.session.commit()
@@ -112,29 +114,3 @@ def profile():
     return render_template('auth/profile.html',
                          user=current_user,
                          profile=user_profile)
-
-@auth.route('/update-blood-group', methods=['POST'])
-@login_required
-def update_blood_group():
-    """Update patient blood group"""
-    if not current_user.is_patient():
-        return jsonify({'success': False, 'message': 'Only patients can update blood group'}), 403
-
-    data = request.get_json()
-    blood_group = data.get('blood_group')
-
-    if not blood_group:
-        return jsonify({'success': False, 'message': 'Blood group is required'}), 400
-
-    valid_blood_groups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
-    if blood_group not in valid_blood_groups:
-        return jsonify({'success': False, 'message': 'Invalid blood group'}), 400
-
-    try:
-        patient = current_user.patient
-        patient.blood_group = blood_group
-        db.session.commit()
-        return jsonify({'success': True, 'message': 'Blood group updated successfully'})
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'success': False, 'message': 'Failed to update blood group'}), 500
