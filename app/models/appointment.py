@@ -71,7 +71,7 @@ class Appointment(db.Model):
             self.status = 'completed'
             self.payment_status = 'paid'
             db.session.add(self)
-            db.session.commit()
+            # Don't commit here - let caller handle transaction
             return True
         return False
     
@@ -86,7 +86,7 @@ class Appointment(db.Model):
                 self.slot.release_slot()
             
             db.session.add(self)
-            db.session.commit()
+            # Don't commit here - let caller handle transaction
             return True
         return False
     
@@ -96,7 +96,7 @@ class Appointment(db.Model):
             self.status = 'no_show'
             self.payment_status = 'cancelled'
             db.session.add(self)
-            db.session.commit()
+            # Don't commit here - let caller handle transaction
             return True
         return False
     
@@ -105,7 +105,7 @@ class Appointment(db.Model):
         if self.consultation_mode == 'online' and video_link:
             self.video_link = video_link
             db.session.add(self)
-            db.session.commit()
+            # Don't commit here - let caller handle transaction
             return True
         return False
     

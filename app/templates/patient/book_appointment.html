@@ -255,20 +255,23 @@
             </div>
         `;
 
-            // Simulate API call to get slots
-            setTimeout(() => {
-                // This would be an actual API call in production
-                const mockSlots = [
-                    { id: 1, token: 1, time: '09:00 - 09:15', available: true },
-                    { id: 2, token: 2, time: '09:15 - 09:30', available: true },
-                    { id: 3, token: 3, time: '09:30 - 09:45', available: false },
-                    { id: 4, token: 4, time: '09:45 - 10:00', available: true },
-                    { id: 5, token: 5, time: '10:00 - 10:15', available: true },
-                    { id: 6, token: 6, time: '10:15 - 10:30', available: false }
-                ];
-
-                displaySlots(mockSlots);
-            }, 1000);
+            // Fetch slots from API
+            fetch(`/patient/api/slots/${shiftId}`)
+                .then(response => response.json())
+                .then(data => {
+                    displaySlots(data.slots);
+                })
+                .catch(error => {
+                    console.error('Error loading slots:', error);
+                    slotsContent.innerHTML = `
+                    <div class="text-center py-3">
+                        <i class="fas fa-exclamation-circle fa-2x text-danger mb-2"></i>
+                        <p class="text-muted">Error loading slots. Please try again.</p>
+                    </div>
+                `;
+                summarySection.style.display = 'none';
+                return;
+                });
         }
 
         function displaySlots(slots) {

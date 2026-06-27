@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from flask_login import login_required, current_user
 from app import db
 from app.models import User, Patient, Doctor, Speciality, Shift, Slot, Appointment, Prescription
@@ -99,6 +99,14 @@ def book_appointment(doctor_id):
         shift_id = request.form.get('shift_id')
         slot_id = request.form.get('slot_id')
         
+        # Convert to integers for database query
+        try:
+            shift_id = int(shift_id) if shift_id else None
+            slot_id = int(slot_id) if slot_id else None
+        except (ValueError, TypeError):
+            flash('Invalid shift or slot selected.', 'danger')
+            return redirect(url_for('patient.book_appointment', doctor_id=doctor_id))
+        
         shift = Shift.query.filter_by(id=shift_id, doctor_id=doctor.id).first_or_404()
         slot = Slot.query.filter_by(id=slot_id, shift_id=shift.id).first_or_404()
         
@@ -133,11 +141,12 @@ def book_appointment(doctor_id):
                 return redirect(url_for('patient.appointment_detail', appointment_id=appointment.id))
             else:
                 flash('Failed to book slot. Please try again.', 'danger')
+                return redirect(url_for('patient.book_appointment', doctor_id=doctor_id))
                 
         except Exception as e:
             db.session.rollback()
-            slot.unlock_slot()
-            flash('Booking failed. Please try again.', 'danger')
+            flash(f'Booking failed: {str(e)}', 'danger')
+            return redirect(url_for('patient.book_appointment', doctor_id=doctor_id))
     
     # Get available shifts and slots
     start_date = date.today()
@@ -154,6 +163,26 @@ def book_appointment(doctor_id):
     return render_template('patient/book_appointment.html',
                          doctor=doctor,
                          available_shifts=available_shifts)
+
+@patient.route('/api/slots/<int:shift_id>')
+@login_required
+@patient_required
+def get_slots(shift_id):
+    """API endpoint to get available slots for a shift"""
+    shift = Shift.query.filter_by(id=shift_id).first_or_404()
+    
+    slots = Slot.query.filter_by(shift_id=shift.id).order_by(Slot.token_number).all()
+    
+    slots_data = []
+    for slot in slots:
+        slots_data.append({
+            'id': slot.id,
+            'token': slot.token_number,
+            'time': slot.time_display,
+            'available': slot.is_available()
+        })
+    
+    return jsonify({'slots': slots_data})
 
 @patient.route('/appointments')
 @login_required

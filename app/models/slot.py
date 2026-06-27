@@ -1,4 +1,4 @@
-from datetime import datetime, time, date
+from datetime import datetime, time, date, timedelta
 from app import db
 
 class Slot(db.Model):
@@ -45,7 +45,7 @@ class Slot(db.Model):
             self.is_locked = False
             self.locked_until = None
             db.session.add(self)
-            db.session.commit()
+            # Don't commit here - let caller handle transaction
             return True
         
         return True
@@ -54,9 +54,9 @@ class Slot(db.Model):
         """Lock slot for transactional booking"""
         if self.is_available():
             self.is_locked = True
-            self.locked_until = datetime.utcnow() + datetime.timedelta(minutes=lock_duration_minutes)
+            self.locked_until = datetime.utcnow() + timedelta(minutes=lock_duration_minutes)
             db.session.add(self)
-            db.session.commit()
+            # Don't commit here - let caller handle transaction
             return True
         return False
     
@@ -65,7 +65,7 @@ class Slot(db.Model):
         self.is_locked = False
         self.locked_until = None
         db.session.add(self)
-        db.session.commit()
+        # Don't commit here - let caller handle transaction
     
     def book_slot(self):
         """Book the slot permanently"""
@@ -74,7 +74,7 @@ class Slot(db.Model):
             self.is_locked = False
             self.locked_until = None
             db.session.add(self)
-            db.session.commit()
+            # Don't commit here - let caller handle transaction
             return True
         return False
     
@@ -84,7 +84,7 @@ class Slot(db.Model):
         self.is_locked = False
         self.locked_until = None
         db.session.add(self)
-        db.session.commit()
+        # Don't commit here - let caller handle transaction
     
     @classmethod
     def generate_slots_for_shift(cls, shift, slot_duration_minutes=15):
