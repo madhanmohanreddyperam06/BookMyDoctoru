@@ -14,12 +14,22 @@ load_dotenv()
 
 def create_mysql_database():
     """Create MySQL database and user if they don't exist"""
-    
+
+    # Get MySQL credentials from environment or use defaults
+    mysql_host = os.environ.get('MYSQL_HOST', 'localhost')
+    mysql_user = os.environ.get('MYSQL_USER', 'root')
+    mysql_password = os.environ.get('MYSQL_PASSWORD', '')
+
+    if not mysql_password:
+        print("⚠️  Warning: MYSQL_PASSWORD not set in environment variables")
+        print("Please set MYSQL_PASSWORD in your .env file or provide it when prompted")
+        mysql_password = input("Enter MySQL root password: ")
+
     # MySQL connection parameters
     mysql_config = {
-        'host': 'localhost',
-        'user': 'root',
-        'password': 'Madhanreddy@123',
+        'host': mysql_host,
+        'user': mysql_user,
+        'password': mysql_password,
         'charset': 'utf8mb4',
         'collation': 'utf8mb4_unicode_ci'
     }

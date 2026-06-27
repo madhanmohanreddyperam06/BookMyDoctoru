@@ -120,8 +120,11 @@ A comprehensive hospital appointment management system supporting Admin, Doctor,
    Update the `.env` file with your MySQL credentials and secret key:
 
    ```env
+   MYSQL_HOST=localhost
+   MYSQL_USER=root
+   MYSQL_PASSWORD=your-mysql-password
    SECRET_KEY=your-secret-key-here-generate-a-random-string
-   DATABASE_URL=mysql+pymysql://username:password@localhost/doctor_appointment
+   DATABASE_URL=mysql+pymysql://root:your-mysql-password@localhost/doctor_appointment
    FLASK_ENV=development
    ```
 
@@ -134,8 +137,11 @@ A comprehensive hospital appointment management system supporting Admin, Doctor,
 4. **Initialize the database**
 
    ```bash
-   # Create MySQL databases
+   # Create MySQL database
    python init_mysql.py
+
+   # Create database tables
+   python create_tables.py
 
    # Seed with sample data
    python init_mysql_data.py
